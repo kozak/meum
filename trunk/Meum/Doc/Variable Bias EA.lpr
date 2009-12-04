@@ -1,6 +1,6 @@
 [Files\0]
 ActiveFilters=
-Bookmark#0=0
+Bookmark#0=119
 Bookmark#1=0
 Bookmark#2=0
 Bookmark#3=0
@@ -10,15 +10,15 @@ Bookmark#6=0
 Bookmark#7=0
 Bookmark#8=0
 Bookmark#9=0
-CaretPos.X=0
-CaretPos.Y=0
-CharSet=def
+CaretPos.X=61
+CaretPos.Y=88
+CharSet=cp1250
 FileName=variablebiasea.tex
 FoldedLines=
 IsMainFile=yes
 Opened=yes
 ScrollPos.X=0
-ScrollPos.Y=1
+ScrollPos.Y=115
 SearchListCount=0
 ShowSyntax=yes
 SpellChecking=yes
@@ -29,11 +29,20 @@ WrapLine=yes
 [Files]
 Count=1
 
+[ProjectDictionary]
+article
+babel
+cp1250
+graphicx
+inputenc
+polish
+twocolumn
+
 [Project]
 ActiveFilters=
 
 [Project\Archive]
-AutoArchive=no
+AutoArchive=No
 AutoSet=1
 Components=as*.gpr;*.lpr:as*.tex;*.sty;*.cls;*.bib;*.mp;*.undo:as*.eps
 Compression=1
@@ -105,7 +114,7 @@ Active=No
 Size=0
 
 [Project\Dictionaries\1033]
-Active=Yes
+Active=No
 
 [Project\Dictionaries\1045\0]
 Active=Yes
@@ -135,6 +144,9 @@ Size=1
 
 [Project\Dictionaries\2057]
 Active=No
+
+[Project]
+MainDictionary=1045
 
 [Template]
 Id=1

@@ -1,14 +1,14 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=pdflatex 2009.12.2)  3 DEC 2009 00:31
+This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=pdflatex 2009.12.4)  4 DEC 2009 15:26
 entering extended mode
 **variablebiasea.tex
-("C:\Users\morswin\Documents\latex\Meum\Variable Bias EA\variablebiasea.tex"
+(J:\Projects\meum\Meum\Doc\variablebiasea.tex
 LaTeX2e <2009/09/24>
 Babel <v3.8l> and hyphenation patterns for english, dumylang, nohyphenation, ge
 rman, ngerman, german-x-2009-06-19, ngerman-x-2009-06-19, french, polish, loade
 d.
-(C:\Apps\Miktex\tex\latex\base\article.cls
+(E:\Apps\miktex\tex\latex\base\article.cls
 Document Class: article 2007/10/19 v1.4h Standard LaTeX document class
-(C:\Apps\Miktex\tex\latex\base\size11.clo
+(E:\Apps\miktex\tex\latex\base\size11.clo
 File: size11.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
 )
 \c@part=\count79
@@ -23,44 +23,44 @@ File: size11.clo 2007/10/19 v1.4h Standard LaTeX file (size option)
 \belowcaptionskip=\skip42
 \bibindent=\dimen102
 )
-(C:\Apps\Miktex\tex\latex\graphics\graphicx.sty
+(E:\Apps\miktex\tex\latex\graphics\graphicx.sty
 Package: graphicx 1999/02/16 v1.0f Enhanced LaTeX Graphics (DPC,SPQR)
 
-(C:\Apps\Miktex\tex\latex\graphics\keyval.sty
+(E:\Apps\miktex\tex\latex\graphics\keyval.sty
 Package: keyval 1999/03/16 v1.13 key=value parser (DPC)
 \KV@toks@=\toks14
 )
-(C:\Apps\Miktex\tex\latex\graphics\graphics.sty
+(E:\Apps\miktex\tex\latex\graphics\graphics.sty
 Package: graphics 2009/02/05 v1.0o Standard LaTeX Graphics (DPC,SPQR)
 
-(C:\Apps\Miktex\tex\latex\graphics\trig.sty
+(E:\Apps\miktex\tex\latex\graphics\trig.sty
 Package: trig 1999/03/16 v1.09 sin cos tan (DPC)
 )
-(C:\Apps\Miktex\tex\latex\00miktex\graphics.cfg
+(E:\Apps\miktex\tex\latex\00miktex\graphics.cfg
 File: graphics.cfg 2007/01/18 v1.5 graphics configuration of teTeX/TeXLive
 )
 Package graphics Info: Driver file: pdftex.def on input line 91.
 
-(C:\Apps\Miktex\tex\latex\pdftex-def\pdftex.def
+(E:\Apps\miktex\tex\latex\pdftex-def\pdftex.def
 File: pdftex.def 2009/08/25 v0.04m Graphics/color for pdfTeX
 \Gread@gobject=\count87
 ))
 \Gin@req@height=\dimen103
 \Gin@req@width=\dimen104
 )
-(C:\Apps\Miktex\tex\generic\babel\babel.sty
+(E:\Apps\miktex\tex\generic\babel\babel.sty
 Package: babel 2008/07/06 v3.8l The Babel package
 
 *************************************
 * Local config file bblopts.cfg used
 *
-(C:\Apps\Miktex\tex\latex\00miktex\bblopts.cfg
+(E:\Apps\miktex\tex\latex\00miktex\bblopts.cfg
 File: bblopts.cfg 2006/07/31 v1.0 MiKTeX 'babel' configuration
 )
-(C:\Apps\Miktex\tex\generic\babel\polish.ldf
+(E:\Apps\miktex\tex\generic\babel\polish.ldf
 Language: polish 2005/03/31 v1.2l Polish support from the babel system
 
-(C:\Apps\Miktex\tex\generic\babel\babel.def
+(E:\Apps\miktex\tex\generic\babel\babel.def
 File: babel.def 2008/07/06 v3.8l Babel common definitions
 \babel@savecnt=\count88
 \U@D=\dimen105
@@ -71,18 +71,18 @@ Package babel Info: Making " an active character on input line 83.
 \pl@right=\dimen108
 \pl@temp=\dimen109
 ))
-(C:\Apps\Miktex\tex\latex\polski\polski.sty
+(E:\Apps\miktex\tex\latex\polski\polski.sty
 Package: polski 2008/02/24 v1.3.3 Polish language package
 
 Document language package `polski' v1.3.3 <2008/02/24>
    Switching to Polish text encoding and Polish maths fonts.
-(C:\Apps\Miktex\tex\latex\base\ot4enc.def
+(E:\Apps\miktex\tex\latex\base\ot4enc.def
 File: ot4enc.def 2005/09/27 v1.99g Standard LaTeX file
 )
 LaTeX Font Info:    Try loading font information for OT4+cmr on input line 346.
 
 
-(C:\Apps\Miktex\tex\latex\polski\ot4cmr.fd
+(E:\Apps\miktex\tex\latex\polski\ot4cmr.fd
 File: ot4cmr.fd 2008/02/24 v1.2.1 Font defs for fonts PL (MW)
 )
 LaTeX Font Info:    Overwriting math alphabet `\mathbf' in version `normal'
@@ -117,15 +117,15 @@ LaTeX Font Info:    Overwriting symbol font `letters' in version `bold'
 LaTeX Font Info:    Overwriting symbol font `symbols' in version `bold'
 (Font)                  OMS/cmsy/b/n --> OMS/plsy/b/n on input line 346.
 )
-(C:\Apps\Miktex\tex\latex\base\inputenc.sty
+(E:\Apps\miktex\tex\latex\base\inputenc.sty
 Package: inputenc 2008/03/30 v1.1d Input encoding file
 \inpenc@prehook=\toks15
 \inpenc@posthook=\toks16
 
-(C:\Apps\Miktex\tex\latex\base\cp1250.def
+(E:\Apps\miktex\tex\latex\base\cp1250.def
 File: cp1250.def 2008/03/30 v1.1d Input encoding file
 ))
-("C:\Users\morswin\Documents\latex\Meum\Variable Bias EA\variablebiasea.aux")
+(J:\Projects\meum\Meum\Doc\variablebiasea.aux)
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 13.
 LaTeX Font Info:    ... okay on input line 13.
 LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 13.
@@ -141,7 +141,7 @@ LaTeX Font Info:    ... okay on input line 13.
 LaTeX Font Info:    Checking defaults for OT4/cmr/m/n on input line 13.
 LaTeX Font Info:    ... okay on input line 13.
 
-(C:\Apps\Miktex\tex\context\base\supp-pdf.tex
+(E:\Apps\miktex\tex\context\base\supp-pdf.tex
 [Loading MPS to PDF converter (version 2006.09.02).]
 \scratchcounter=\count89
 \scratchdimen=\dimen110
@@ -155,19 +155,19 @@ LaTeX Font Info:    ... okay on input line 13.
 \everyMPtoPDFconversion=\toks18
 )
 LaTeX Font Info:    Try loading font information for OML+plm on input line 14.
- (C:\Apps\Miktex\tex\latex\polski\omlplm.fd
+ (E:\Apps\miktex\tex\latex\polski\omlplm.fd
 File: omlplm.fd 2008/02/24 v1.2.1 Font defs for fonts PL (MW)
 )
 LaTeX Font Info:    Try loading font information for OMS+plsy on input line 14.
 
 
-(C:\Apps\Miktex\tex\latex\polski\omsplsy.fd
+(E:\Apps\miktex\tex\latex\polski\omsplsy.fd
 File: omsplsy.fd 2008/02/24 v1.2.1 Font defs for fonts PL (MW)
 )
 LaTeX Font Info:    Try loading font information for OMX+plex on input line 14.
 
 
-(C:\Apps\Miktex\tex\latex\polski\omxplex.fd
+(E:\Apps\miktex\tex\latex\polski\omxplex.fd
 File: omxplex.fd 2008/02/24 v1.2.1 Font defs for fonts PL (MW)
 )
 LaTeX Font Info:    External font `plex10' loaded for size
@@ -178,7 +178,7 @@ LaTeX Font Info:    External font `plex10' loaded for size
 (Font)              <6> on input line 14.
 LaTeX Font Info:    Try loading font information for OMS+cmr on input line 22.
 
-(C:\Apps\Miktex\tex\latex\base\omscmr.fd
+(E:\Apps\miktex\tex\latex\base\omscmr.fd
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
@@ -186,22 +186,23 @@ LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
 
 Underfull \vbox (badness 1314) has occurred while \output is active []
 
- [1{C:/Users/morswin/AppData/Local/MiKTeX/2.8/pdftex/config/pdftex.map}
+ [1{C:/Documents and Settings/Administrator/Local Settings/Application Data/MiK
+TeX/2.8/pdftex/config/pdftex.map}
 
 
 ]
-Underfull \hbox (badness 1565) in paragraph at lines 49--50
-\OT4/cmr/m/n/10.95 in-nych do-st¦p-nych pa-ra-me-te-rów) z pew-nego
+Underfull \hbox (badness 1320) in paragraph at lines 45--48
+[]\OT4/cmr/m/n/10.95 Analiza ryn-ków zna-cz¡co ró»ni si¦ w za-
  []
 
 
-Overfull \hbox (27.7329pt too wide) in paragraph at lines 54--55
-[]\OT4/cmr/m/n/10.95 WEKA (http://www.cs.waikato.ac.nz/ml/weka/)
+Underfull \hbox (badness 5175) in paragraph at lines 45--48
+\OT4/cmr/m/n/10.95 le»-no-±ci od cz¦-sto-tli-wo-±ci trans-ak-cji, któr¡
  []
 
 
-Overfull \hbox (38.31908pt too wide) in paragraph at lines 55--56
-[]\OT4/cmr/m/n/10.95 Watchmaker (http://watchmaker.uncommons.org/)
+Underfull \hbox (badness 3179) in paragraph at lines 49--50
+\OT4/cmr/m/n/10.95 in-nych do-st¦p-nych pa-ra-me-trów) z pew-nego
  []
 
 
@@ -209,33 +210,58 @@ Underfull \hbox (badness 2020) in paragraph at lines 63--64
 []\OT4/cmr/m/n/10.95 zaczynamy od po-pu-la-cji ba-zo-wej drzew
  []
 
-[2]
-Underfull \hbox (badness 1418) in paragraph at lines 89--90
+<images/mutacja1.png, id=11, 597.73312pt x 420.82219pt>
+File: images/mutacja1.png Graphic file (type png)
+
+<use images/mutacja1.png>
+<images/mutacja2.png, id=12, 597.73312pt x 420.82219pt>
+File: images/mutacja2.png Graphic file (type png)
+
+<use images/mutacja2.png> [2 <J:/Projects/meum/Meum/Doc/images/mutacja1.png>]
+Underfull \vbox (badness 3735) has occurred while \output is active []
+
+
+Underfull \hbox (badness 1418) in paragraph at lines 101--102
 []\OT4/cmr/m/n/10.95 propozycja zle-ce« na in-nych in-stru-men-
  []
 
-[3] [4
-
+[3 <J:/Projects/meum/Meum/Doc/images/mutacja2.png>] [4
 
 ]
-("C:\Users\morswin\Documents\latex\Meum\Variable Bias EA\variablebiasea.aux") )
- 
+Underfull \hbox (badness 3333) in paragraph at lines 115--116
+[]\OT4/cmr/m/n/10.95 Kwa±nicka H.: Ob-li-cze-nia ewo-lu-cyjne w
+ []
+
+
+Underfull \hbox (badness 1038) in paragraph at lines 116--117
+[]\OT4/cmr/m/n/10.95 Michalewicz Z.: Al-go-rytmy ge-ne-tyczne +
+ []
+
+
+Overfull \hbox (28.55536pt too wide) in paragraph at lines 118--119
+[]\OT4/cmr/m/n/10.95 blog: http://www.puppetmastertrading.com/blog/ 
+ []
+
+[5
+
+
+] (J:\Projects\meum\Meum\Doc\variablebiasea.aux) ) 
 Here is how much of TeX's memory you used:
- 1556 strings out of 495238
- 19382 string characters out of 3180691
- 77100 words of memory out of 3000000
- 4780 multiletter control sequences out of 15000+200000
+ 1577 strings out of 495238
+ 19522 string characters out of 3180619
+ 75147 words of memory out of 3000000
+ 4797 multiletter control sequences out of 15000+200000
  10383 words of font info for 31 fonts, out of 3000000 for 9000
  34 hyphenation exceptions out of 8191
- 25i,7n,24p,697b,222s stack positions out of 5000i,500n,10000p,200000b,50000s
-{C:/Apps/Miktex/fonts/enc/dvips/pl/plrm.enc}<C:/Apps/Miktex/fonts/type1/public/
-amsfonts/cm/cmsy10.pfb><C:/Apps/Miktex/fonts/type1/public/pl/plbx10.pfb><C:/App
-s/Miktex/fonts/type1/public/pl/plbx12.pfb><C:/Apps/Miktex/fonts/type1/public/pl
-/plr10.pfb><C:/Apps/Miktex/fonts/type1/public/pl/plr12.pfb><C:/Apps/Miktex/font
-s/type1/public/pl/plr17.pfb>
-Output written on variablebiasea.pdf (4 pages, 62643 bytes).
+ 25i,7n,24p,922b,222s stack positions out of 5000i,500n,10000p,200000b,50000s
+{E:/Apps/miktex/fonts/enc/dvi
+ps/pl/plrm.enc}<E:/Apps/miktex/fonts/type1/public/amsfonts/cm/cmsy10.pfb><E:/Ap
+ps/miktex/fonts/type1/public/pl/plbx10.pfb><E:/Apps/miktex/fonts/type1/public/p
+l/plbx12.pfb><E:/Apps/miktex/fonts/type1/public/pl/plr10.pfb><E:/Apps/miktex/fo
+nts/type1/public/pl/plr12.pfb><E:/Apps/miktex/fonts/type1/public/pl/plr17.pfb>
+Output written on variablebiasea.pdf (5 pages, 97433 bytes).
 PDF statistics:
- 40 PDF objects out of 1000 (max. 8388607)
+ 45 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 11 words of extra memory for PDF output out of 10000 (max. 10000000)
 

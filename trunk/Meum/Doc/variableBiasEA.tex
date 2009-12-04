@@ -14,7 +14,7 @@
 \maketitle 
 
 \section{Wstêp}
-Jako projekt na przedmiot MEUM (Metody Ewolucyjne Uczenia Maszyn) dostaliœmy za zadanie stworzyc klasyfikator rozwijany za pomoc¹ algorytmu ewolucyjnego, którego ukierunkowanie zmienialoby siê podczas uruchomienia. EA zostanie u¿yty do zmian drzew decyzyjnych. Zmienne ukierunkowanie rozwoju drzew uzyskamy przez modyfikacje funkcji celu, oceniaj¹cej zarówno efektywnoœæ klasyfikacji jak równie¿ strukturê drzewa.
+Jako projekt na przedmiot MEUM (Metody Ewolucyjne Uczenia Maszyn) dostaliœmy za zadanie stworzyæ klasyfikator rozwijany za pomoc¹ algorytmu ewolucyjnego, którego ukierunkowanie zmienia³oby siê podczas uruchomienia. EA zostanie u¿yty do zmian drzew decyzyjnych. Zmienne ukierunkowanie rozwoju drzew uzyskamy przez modyfikacje funkcji celu, oceniaj¹cej zarówno efektywnoœæ klasyfikacji jak równie¿ strukturê drzewa.
 
 \section{Opis problemu klasyfikacji}
 Zadaniem klasyfikacji bêdzie zakwalifikowanie instrumentu gie³dowego do jednej z trzech grup: [kup, sprzedaj, nie ruszaj]. 
@@ -28,31 +28,31 @@ Zadaniem klasyfikacji bêdzie zakwalifikowanie instrumentu gie³dowego do jednej z
 \section{Dane}
 Klasyfikacjê bêdziemy przeprowadzaæ na cenach archiwalnych wybranych instrumentów. W zale¿noœci od analizowanego okresu czasu, wymagany bêdzie inny typ danych:
 \begin{itemize}
-\item Intra-day trading, High Frequency trading - czyli kupno i sprzeda¿ instrumentów wielokrotnie w ci¹gu jednego dnia, nie pozostawianie otwartych pozycji na noc. Wymaga danych tick-to-tick czyli ka¿dej zmiany ceny instrumentu w ci¹gu dnia; Dane tick-to-tick so z regu³y dostêpne za op³at¹, zajmuj¹ te¿ olbrzymi¹ iloœæ miejsca; 
-\item Daily trading - czyli tranzakcje na przestrzeni dni/tygodni; Nie potrzebujemy danych tick-to-tick, wystarcz¹ parametry takie jak:
+\item Intra-day trading, High Frequency trading - czyli kupno i sprzeda¿ instrumentów wielokrotnie w ci¹gu jednego dnia, nie pozostawianie otwartych pozycji na noc. Wymaga danych tick-to-tick czyli ka¿dej zmiany ceny instrumentu w ci¹gu dnia; Dane tick-to-tick s¹ z regu³y dostêpne za op³at¹, zajmuj¹ te¿ olbrzymi¹ iloœæ miejsca; 
+\item Daily trading - czyli transakcje na przestrzeni dni/tygodni; Nie potrzebujemy danych tick-to-tick, wystarcz¹ parametry takie jak:
 \begin{itemize}      
 \item cena otwarcia
-\item cena zamkniecia
+\item cena zamkniêcia
 \item cena maksymalna/minimalna z danego dnia
-\item iloœæ tranzakcji (volume)
+\item iloœæ transakcji (volume)
 \end{itemize}
-Dane o tej czêstotliwoœci mo¿na zdobyæ np z Yahoo Finance:
-http://finance.yahoo.com/ dla okresów o dowolnej, maj¹cej znaczenie dla algorytmu, d³ugoœci.
+Dane o tej czêstotliwoœci mo¿na zdobyæ np z Yahoo Finance\cite{YAHOOF}:
+dla okresów o dowolnej, maj¹cej znaczenie dla algorytmu, d³ugoœci.
 
-\item Long term trading - zak³ada d³ugotrwa³e inwestycje, t¹ form¹ nie bedziêmy siê zajmowaæ
+\item Long term trading - zak³ada d³ugotrwa³e inwestycje, t¹ form¹ nie bêdziemy siê zajmowaæ
 \end{itemize}
 
-Analiza rynków znacz¹co ró¿ni siê w zale¿noœci od czêstotliwoœci tranzakcji, któr¹ rozpatrujemy. 
+Analiza rynków znacz¹co ró¿ni siê w zale¿noœci od czêstotliwoœci transakcji, któr¹ rozpatrujemy\cite{TR8DER}. 
 Je¿eli nie uda siê zdobyæ wystarczaj¹cej iloœci danych intra-day, zajmiemy siê 
 klasyfikacj¹ danych dziennych.
 
-Wektorem wejœciowym bêdziê ci¹g cen (oraz innych dostêpnych parameterów) z pewnego okresu czasu (zale¿nie od wybranej czêstotliwoœci), równie¿ dla instrumentów innych ni¿ analizowany. 
+Wektorem wejœciowym bêdzie ci¹g cen (oraz innych dostêpnych parametrów) z pewnego okresu czasu (zale¿nie od wybranej czêstotliwoœci), równie¿ dla instrumentów innych ni¿ analizowany. 
 
 \section {Narzêdzia realizacji}
 Podczas pracy nad algorytmem, prototyp powstanie w œrodowisku R, natomiast wersja ostateczna wykonana bêdzie w Javie, przy u¿yciu nastêpuj¹cych bibliotek:
 \begin{itemize}
-\item WEKA (http://www.cs.waikato.ac.nz/ml/weka/) - biblioteka do eksploracji danych, zawiera implementacjê ró¿nych algorytmów budowy drzew decyzyjnych (m.in. ID3)
-\item Watchmaker (http://watchmaker.uncommons.org/) - biblioteka do metod ewolucyjnych
+\item WEKA \cite{WEKA} - biblioteka do eksploracji danych, zawiera implementacjê ró¿nych algorytmów budowy drzew decyzyjnych (m.in. ID3)
+\item Watchmaker \cite{WATCHMAKER}  - biblioteka do metod ewolucyjnych
 \end{itemize}
 
 Wybór jêzyka kompilowanego, jest uzasadniony du¿ymi wymaganiami obliczeniowymi metod ewolucyjnych; Javy, ze wzglêdu na dostêpnoœæ bibliotek i ³atwoœæ programowania.
@@ -60,47 +60,68 @@ Wybór jêzyka kompilowanego, jest uzasadniony du¿ymi wymaganiami obliczeniowymi m
 \section{Opis algorytmu}
 Prototyp algorytmu wygl¹da nastêpuj¹co:
 \begin{itemize}
-\item zaczynamy od populacji bazowej drzew wygenerowanych algorytmem ID3, ktorych struktura i parametry s¹ póŸniej zrandomizowane
+\item zaczynamy od populacji bazowej drzew wygenerowanych algorytmem ID3, których struktura i parametry s¹ zmienione losowo
 \item osobniki dokonuj¹ klasyfikacji 
 \item oceniamy sprawnoœæ osobników na podstawie pewnej funkcji celu F
-\item wybieramy x osobnikow do mutacji, metod¹ ruletkow¹
-\item z poœród nowej populacji (powiêkszonej o x) usuwamy x osobników o najni¿szej sprawnoœæi 
+\item wybieramy x osobników do mutacji, metod¹ ruletkow¹
+\item z poœród nowej populacji (powiêkszonej o x) usuwamy x osobników o najni¿szej sprawnoœci 
 \item proces powtarzamy przez g generacji
 \end{itemize}
-Operator mutacji dla drzew decyzyjnych mo¿e zmieniaæ wartoœci parametrów (u¿ytych w wêŸle drzewa do podzia³u) oraz pozycjê wêz³ów w drzewie. 
+Operator mutacji dla drzew decyzyjnych mo¿e zmieniaæ wartoœci parametrów (Rys. \ref{fig:mutacja2}) oraz warunki podzia³u (Rys. \ref{fig:mutacja1}) wêz³a drzewa.  
 
-OBRAZEK ILUSTRUJACY MUTACJE W DRZEWIE DECYZYJNYM
+\begin{figure}
+\centering
+\includegraphics[scale=0.3]{images/mutacja1.png}
+\caption{Mutacja warunku}
+\label{fig:mutacja1}
+\end{figure}
 
-Funkcja celu F bêdzie zmieniaæ siê w trakcie dzia³ania algorytmu. Jako podstawê sprawnoœci wygenerowanego osobnika uznamy iloœæ poprawnych klasyfikacji. Dodatkowymi warunkami, aktywowanymi po pewnej (jeszcze nie ustalonej) liczbie generacji, b¹dz przy spe³nieniu okreœlonych wymagañ (np. osobnik klasyfikuje poprawnie czêœciej ni¿ 50\% ), bed¹:
+\begin{figure}
+\centering
+\includegraphics[scale=0.3]{images/mutacja2.png}
+\caption{Mutacja parametru}
+\label{fig:mutacja2}
+\end{figure}
+
+Funkcja celu F bêdzie zmieniaæ siê w trakcie dzia³ania algorytmu. Jako podstawê sprawnoœci wygenerowanego osobnika uznamy iloœæ poprawnych klasyfikacji. Dodatkowymi warunkami, aktywowanymi po pewnej (jeszcze nie ustalonej) liczbie generacji, b¹dŸ przy spe³nieniu okreœlonych wymagañ (np. osobnik klasyfikuje poprawnie czêœciej ni¿ 50\% ), bêd¹:
 \begin{itemize}
-\item ocena potencjalnej wielkoœci zysku, obliczona na podstawie dalszego wzrostu b¹dz spadku ceny instrumentu
+\item ocena potencjalnej wielkoœci zysku, obliczona na podstawie dalszego wzrostu b¹dŸ spadku ceny instrumentu
 \item ocena struktury drzewa decyzyjnego, np kara za wysokoœæ
 \item mo¿liwoœæ oceny na podstawie historii je¿eli osobnik prze¿y³ do nastêpnych generacji
 \end{itemize}  
 
 \section{Oczekiwania} 
-Podstawowym pytaniem jest, czy algorytm tego typu mo¿e wygenerowaæ zysk. Nawet je¿eli to siê nie uda, chcielibyœmy zaobserwowaæ czy algorytm wykryje korelacjê miêdzy ró¿nymi instrumentami (np. akcjami firm dzia³aj¹cych w jednej bran¿y). Jakie parametry bêd¹ u¿ywane do klasyfikacji, np czy iloœæ tranzakcji bêdzie mia³a znaczenie? Czy model cen wygenerowany przez algorytm bêdzie mia³ cechy wspólne z innymi modelami rynków? Interesuj¹cym jest równie¿ jak kara za wysokoœæ drzewa wp³ynie na zachowanie algorytmu - d¹¿enie do upraszczania drzew decyzyjnych mo¿e prowadziæ np do zwiêkszenia odpornoœci na zak³ucenia czy zwiêkszania zdolnoœci algorytmu do generalizacji. 
+Podstawowym pytaniem jest, czy algorytm tego typu mo¿e wygenerowaæ zysk. Nawet je¿eli to siê nie uda, chcielibyœmy zaobserwowaæ czy algorytm wykryje korelacjê miêdzy ró¿nymi instrumentami (np. akcjami firm dzia³aj¹cych w jednej bran¿y \cite{ALEXANDER}). Jakie parametry bêd¹ u¿ywane do klasyfikacji, np czy iloœæ transakcji bêdzie mia³a znaczenie? Czy model cen wygenerowany przez algorytm bêdzie mia³ cechy wspólne z innymi, znanymi modelami rynków\cite{MAXDAMA}? Interesuj¹cym jest równie¿ jak kara za wysokoœæ drzewa wp³ynie na zachowanie algorytmu - d¹¿enie do upraszczania drzew decyzyjnych mo¿e prowadziæ np do zwiêkszenia odpornoœci na zak³ócenia czy zwiêkszania zdolnoœci algorytmu do generalizacji. 
 
 \section{Mo¿liwe rozszerzenia}
 Mo¿liwe s¹ rozszerzenia do algorytmu bazowego (o ró¿nej z³o¿onoœci) np:
 \begin{itemize}
 \item informacja o pewnoœci z jak¹ dokonana by³a klasyfikacja
 \item informacja o przewidywanej d³ugoœci trendu instrumentu (np dla [kup] chcielibyœmy wiedzieæ jak bardzo cena mo¿e jeszcze urosn¹æ)
-\item propozycja zleceñ na innych instrumentach zmniejszaj¹cych ryzyko danej inwestycji (ang. Hedge)
+\item propozycja zleceñ na innych instrumentach zmniejszaj¹cych ryzyko danej inwestycji (Ang. Hedge)
 \item zastosowanie algorytmu w czasie rzeczywistym na aktualnych cenach obowi¹zuj¹cych na gie³dzie 
-\item zastosowanie predefiniowanych (wybranych przez u¿ytkownika) wêz³ów drzew, zwiêkszaj¹cych determinizm algorytmu, parametery których mog³y by byæ rozwijane drog¹ ewolucji 
+\item zastosowanie predefiniowanych (wybranych przez u¿ytkownika) wêz³ów drzew, zwiêkszaj¹cych determinizm algorytmu, parametry których mog³y by byæ rozwijane drog¹ ewolucji 
 \end{itemize}
 
 \section{Podsumowanie}
-Przedstawiliœmy prototyp algorytmu do klasyfikacji instrumentów gie³dowych. Zastosowanie algorytmu w jednym, wczeœniej wyznaczonym celu pozwala na lepsze przystosowanie i u¿ycie mniej ogólnych zasad zmiany ukierunkowañ. I nie wiem co dalej :P 
+Algorytm ewolucyjny jest nieintuicyjny podczas gdy umys³ ludzki poszukuje rozwi¹zañ na utartych œcie¿kach, ciê¿ko mu wybiæ siê ze schematu. Najczêœciej sprawdza jedynie proste symetryczne konstrukcje. Algorytm ewolucyjny jest wolny od tych ograniczeñ. Swobodnie sprawdza wszystkie poprawne rozwi¹zania, poszukuj¹c najlepszego. Istotn¹ zalet¹ ewolucyjnego podejœcia do modelowania jest równie¿ znaczne ograniczenie wiedzy a priori. W ekonometrii to analityk decyduje o formie funkcyjnej modelu, sugeruj¹c siê testami statystycznymi, wiedz¹ ekonomiczn¹ na temat modelowanego zjawiska oraz w³asnym doœwiadczeniem. W podejœciu ewolucyjnym to ewolucja steruje wyborem najbardziej odpowiedniej funkcji. Proces modelowania jest wiêc w pe³ni sterowany danymi, bez wiedzy z zewn¹trz. Wykonanie projektu pozwoli nam, w jakimœ stopniu na ocenê wartoœci algorytmu ewolucyjnego w modelowaniu ekonomicznym.
+
 
 \clearpage
 \begin{thebibliography}{9}
-\bibitem{BIB1} Bibliografia 1
-\bibitem{BIB2} Bibliografia 2
-\bibitem{BIB3} Bibliografia 3
-\bibitem{BIB4} Bibliografia 4
-\bibitem{BIB5} Bibliografia 5
+\bibitem{GOLDBERG} D. E. Goldberg: Algorytmy genetyczne i ich zastosowania. Warszawa: WNT, 1998.
+\bibitem{CICHOSZ} Pawe³ Cichosz: Systemy ucz¹ce siê, WNT, Warszawa 2000
+\bibitem{ARABAS} Arabas J., Wyk³ady z algorytmów ewolucyjnych, WNT, Warszawa 2001
+\bibitem{KWASNICKA} Kwaœnicka H.: Obliczenia ewolucyjne w sztucznej inteligencji, Oficyna Wydawnicza PWr., Wroc³aw, 1999
+\bibitem{MICHALEWICZ} Michalewicz Z.: Algorytmy genetyczne + struktury danych = programy ewolucyjne, WNT, Warszawa, 1996
+\bibitem{TR8DER} blog: http://tr8dr.wordpress.com/
+\bibitem{HACKTHEMARKET} blog: http://www.puppetmastertrading.com/blog/
+\bibitem{MAXDAMA} blog: http://www.maxdama.com/
+\bibitem{ALEXANDER} Carol Alexander: Market Models: A Guide to Financial Data 
+Analysis, Wiley, 2001
+\bibitem{WEKA} http://www.cs.waikato.ac.nz/ml/weka/
+\bibitem{WATCHMAKER} http://watchmaker.uncommons.org/
+\bibitem{YAHOOF} http://finance.yahoo.com/ 
 \end{thebibliography}
 
 
