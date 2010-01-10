@@ -8,10 +8,13 @@ public class DecisionNode implements TreeNode {
     private TreeNode left;
     private TreeNode right;
 
-    private int index;
-    private double threshold;
+    private final int index;
+    private final double threshold;
 
-    public DecisionNode(final TreeNode left, final TreeNode right, final int index, final double threshold) {
+    public DecisionNode(final TreeNode left,
+                        final TreeNode right,
+                        final int index,
+                        final double threshold) {
         this.left = left;
         this.right = right;
         this.index = index;
@@ -59,7 +62,6 @@ public class DecisionNode implements TreeNode {
         return 1 + left.countNodes() + right.countNodes();
     }
 
-
     public TreeNode getNode(int index) {
         if (index == 0) {
             return this;
@@ -91,9 +93,9 @@ public class DecisionNode implements TreeNode {
         }
         int leftNodes = left.countNodes();
         if (index <= leftNodes) {
-            return new DecisionNode(left.replaceNode(index - 1, newNode), right, index, threshold);
+            return new DecisionNode(left.replaceNode(index - 1, newNode), right, this.index, threshold);
         } else {
-            return new DecisionNode(left, right.replaceNode(index - leftNodes - 1, newNode), index, threshold);
+            return new DecisionNode(left, right.replaceNode(index - leftNodes - 1, newNode), this.index, threshold);
         }
     }
 

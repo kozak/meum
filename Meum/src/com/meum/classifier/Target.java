@@ -1,12 +1,15 @@
 package com.meum.classifier;
 
 public enum Target {
-    BUY,SELL;
+    BUY,SELL, CANT_TOUCH_THIS;
 
     public Target getOpposite() {
         if (this == BUY) {
             return SELL;
         }
-        return BUY;
+        else if (this == SELL) {
+            return BUY;
+        }
+        return CANT_TOUCH_THIS;
     }
 }
