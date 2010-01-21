@@ -94,14 +94,15 @@ public class TreeFactory extends AbstractCandidateFactory<Node>
         {
             // Max depth for sub-trees is one less than max depth for this node.
             int depth = maxDepth - 1;
-            switch (rng.nextInt(6))
+            switch (rng.nextInt(7))
             {
                 case 0: return new Addition(makeNode(rng, depth), makeNode(rng, depth));
                 case 1: return new Subtraction(makeNode(rng, depth), makeNode(rng, depth));
                 case 2: return new Multiplication(makeNode(rng, depth), makeNode(rng, depth));
                 case 3: return new Sqrt(makeNode(rng, depth));
                 case 4: return new Sqr(makeNode(rng, depth));
-                //case 5: return new IfThenElse(makeNode(rng, depth), makeNode(rng, depth), makeNode(rng, depth));
+                case 5: return new IfThenElse(makeNode(rng, depth), makeNode(rng, depth), makeNode(rng, depth));
+                case 6: return new Exp(makeNode(rng, depth));
                 default: return new IsGreater(makeNode(rng, depth), makeNode(rng, depth));
             }
         }

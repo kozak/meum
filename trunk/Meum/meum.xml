@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="meum" default="tests">
+
+    <taskdef resource="testngtasks" classpath="lib/testng-5.11-jdk15.jar"/>
+
+    <path id="compile.class.path">
+        <fileset dir="lib" includes="**/*.jar">
+        </fileset>
+    </path>
+
+    <path id="test.path">
+      <fileset dir="lib" includes="**/*.jar"/>
+    </path>
+
+    <path id="instrumented.path">
+        <!-- Instrumented classes take precedence. -->
+        <dirset dir="build">
+            <include name="**/classes"/>
+        </dirset>
+        <path refid="test.path"/>
+    </path>
+
+    <macrodef name="compile.src.group">
+        <attribute name="module.name"/>
+        <attribute name="build.dir" default="build"/>
+        <attribute name="src.dir" default="src"/>
+        <attribute name="compiler.debug" default="true"/>
+        <attribute name="compiler.deprecation" default="true"/>
+        <attribute name="compiler.optimize" default="true"/>
+        <attribute name="compiler.verbose" default="false"/>
+        <attribute name="compiler.version" default="1.5"/>
+        <attribute name="compiler.encoding" default="iso-8859-1"/>
+        <attribute name="compiler.nowarn" default="false"/>
+        <attribute name="compiler.xlint" default="-Xlint:unchecked"/>
+        <element name="group.classpath" optional="true"/>
+        <sequential>
+            <mkdir dir="@{build.dir}/classes/"/>
+            <mkdir dir="@{build.dir}/dist"/>
+            <javac destdir="@{build.dir}/classes" debug="@{compiler.debug}"
+                   deprecation="@{compiler.deprecation}" optimize="@{compiler.optimize}" source="@{compiler.version}"
+                   target="@{compiler.version}" verbose="@{compiler.verbose}" encoding="@{compiler.encoding}"
+                   nowarn="@{compiler.nowarn}" srcdir="@{src.dir}">
+                <classpath>
+                    <fileset dir="." includes="lib/**/*.jar"/>
+                    <path refid="compile.class.path"/>
+                    <group.classpath/>
+                </classpath>
+                <compilerarg value="@{compiler.xlint}"/>
+                <exclude name="**/package-info.java"/>
+            </javac>
+        </sequential>
+    </macrodef>
+
+
+    <macrodef name="compile.module">
+        <attribute name="module.name"/>
+        <attribute name="build.dir" default="build"/>
+        <attribute name="src.dir" default="src"/>
+        <attribute name="lib.dir" default="lib"/>
+
+        <attribute name="compiler.debug" default="true"/>
+        <attribute name="compiler.deprecation" default="true"/>
+        <attribute name="compiler.optimize" default="true"/>
+        <attribute name="compiler.verbose" default="false"/>
+        <attribute name="compiler.version" default="1.5"/>
+        <attribute name="compiler.encoding" default="iso-8859-1"/>
+        <attribute name="compiler.nowarn" default="false"/>
+        <attribute name="compiler.xlint" default="-Xlint:unchecked"/>
+        <element name="dependency.classpath" optional="true"/>
+        <element name="testdependency.classpath" optional="true"/>
+        <sequential>
+            <compile.src.group module.name="@{module.name}"  build.dir="@{build.dir}"
+                               src.dir="@{src.dir}" compiler.debug="@{compiler.debug}"
+                               compiler.deprecation="@{compiler.deprecation}" compiler.optimize="@{compiler.optimize}"
+                               compiler.verbose="@{compiler.verbose}" compiler.version="@{compiler.version}"
+                               compiler.encoding="@{compiler.encoding}" compiler.nowarn="@{compiler.nowarn}"
+                               compiler.xlint="@{compiler.xlint}">
+                <group.classpath>
+                    <dependency.classpath/>
+                </group.classpath>
+            </compile.src.group>
+        </sequential>
+    </macrodef>
+
+
+    <target name="compile">
+        <compile.module module.name="meum"/>
+    </target>
+
+    <target name="clean">
+        <delete dir="build"/>
+        <delete dir="tests"/>
+        <delete dir="test-output"/>        
+    </target>
+
+
+    <target name="tests" depends="compile">
+        <testng classpathref="instrumented.path"
+                outputdir="tests"
+                haltonfailure="true"
+                suitename="Classifier"
+                useDefaultListeners="false"
+                listeners="org.uncommons.reportng.HTMLReporter">
+            <classfileset dir="build/classes"/>
+            <sysproperty key="org.uncommons.reportng.title" value="Classifier results"/>
+        </testng>
+    </target>
+</project>

@@ -65,8 +65,8 @@ public class Markets {
                                      final int numParameter) {
         TreeFactory factory = new TreeFactory(numParameter, // Number of parameters passed into each program.
                 numParameter, // Maximum depth of generated trees.
-                new Probability(0.3d), // Probability that a node is a function node.
-                Probability.ONE); // Probability that other nodes are params rather than constants.
+                new Probability(0.5d), // Probability that a node is a function node.
+                new Probability(0.7d)); // Probability that other nodes are params rather than constants.
         List<EvolutionaryOperator<Node>> operators = new ArrayList<EvolutionaryOperator<Node>>(3);
         operators.add(new TreeMutation(factory, new Probability(0.6d)));
         operators.add(new TreeCrossover());

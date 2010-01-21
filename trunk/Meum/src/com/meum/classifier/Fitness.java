@@ -30,9 +30,7 @@ public class Fitness implements FitnessEvaluator<TreeNode>, EvolutionObserver<Tr
         if (populationData != null) {
             final int number = populationData.getGenerationNumber();
             if (number > (numGenerations / 2)) {
-                error += candidate.getDepth() * depthWeight;
-            } else {
-                error -= candidate.getDepth() * depthWeight;
+                error += candidate.getDepth() * depthWeight ;
             }
         }
         return error;
@@ -44,5 +42,12 @@ public class Fitness implements FitnessEvaluator<TreeNode>, EvolutionObserver<Tr
 
     public void populationUpdate(PopulationData<? extends TreeNode> populationData) {
         this.populationData = populationData;
+    }
+
+    @Override
+    public String toString() {
+        return "Fitness {" +
+                "\n The number of incorrectly classified instances."
+                +"\n}";
     }
 }
