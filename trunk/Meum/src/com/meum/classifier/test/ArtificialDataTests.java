@@ -11,6 +11,7 @@ import org.uncommons.watchmaker.framework.selection.RouletteWheelSelection;
 import org.uncommons.watchmaker.framework.termination.GenerationCount;
 import org.uncommons.watchmaker.framework.termination.TargetFitness;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -28,14 +29,15 @@ public class ArtificialDataTests extends EvolutionTest {
     }
 
 
-    @Test(description = "Basic test to check everything is up and running")
-    public void basicTest() {
+    @Test
+    public void basicTest() throws IOException {
         final Map<double[], Target> data = TEST_DATA;
         final DecisionTreeFactory factory = new DecisionTreeFactory(data, 2);
         final List<EvolutionaryOperator<TreeNode>> operators = new ArrayList<EvolutionaryOperator<TreeNode>>();
         operators.add(new Mutation(Probability.EVENS, factory));
-
-        final TestConfig config = new TestConfig(2, 1000, 20, new TerminationCondition[]{
+        operators.add(new Simplification());
+        final TestConfig config = new TestConfig("Basic test to check everything is up and runnning",
+                2, 1000, 20, new TerminationCondition[]{
                 new TargetFitness(0, false),
                 new GenerationCount(1000)},
                 new Fitness(data, 500, 0.001),

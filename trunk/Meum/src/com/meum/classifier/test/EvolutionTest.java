@@ -1,18 +1,21 @@
 package com.meum.classifier.test;
 
 import com.meum.classifier.*;
+import com.meum.classifier.utils.ImageWriter;
+import com.meum.classifier.utils.TreeRenderer;
 import org.testng.Reporter;
 import org.uncommons.watchmaker.framework.*;
 import org.uncommons.watchmaker.framework.operators.EvolutionPipeline;
 
+import java.io.IOException;
 import java.util.*;
 
 public abstract class EvolutionTest {
 
     @SuppressWarnings("unchecked")
     public static TreeNode evolve(final TestConfig config,
-                           final Map<double[], Target> trainingData,
-                           final EngineInitializer initializer) {
+                                  final Map<double[], Target> trainingData,
+                                  final EngineInitializer initializer) throws IOException {
         log(config);
         final int depth = config.getSubTreeMaxDepth();
         DecisionTreeFactory factory = new DecisionTreeFactory(trainingData, depth);
@@ -31,12 +34,12 @@ public abstract class EvolutionTest {
                 config.getEliteCount(),
                 config.getTerminationConditions());
         log(treeNode.print());
-
+        ImageWriter.save(config.getTestName(), new TreeRenderer().render(treeNode));
         return treeNode;
     }
 
     public static TreeNode evolve(final TestConfig config,
-                           final Map<double[], Target> trainingData) {
+                                  final Map<double[], Target> trainingData) throws IOException {
         return evolve(config, trainingData, null);
     }
 
@@ -64,14 +67,17 @@ public abstract class EvolutionTest {
         List<EvolutionaryOperator<TreeNode>> operators;
         Random random;
         SelectionStrategy selectionStrategy;
+        private String testName;
 
-        public TestConfig(int subTreeMaxDepth,
+        public TestConfig(String testName,
+                          int subTreeMaxDepth,
                           int populationSize,
                           int eliteCount,
                           TerminationCondition[] terminationConditions,
                           Fitness fitness, List<EvolutionaryOperator<TreeNode>> operators,
                           Random random,
                           SelectionStrategy selectionStrategy) {
+            this.testName = testName;
             this.subTreeMaxDepth = subTreeMaxDepth;
             this.populationSize = populationSize;
             this.eliteCount = eliteCount;
@@ -114,9 +120,14 @@ public abstract class EvolutionTest {
             return selectionStrategy;
         }
 
+        public String getTestName() {
+            return testName;
+        }
+
         @Override
         public String toString() {
             return "TestConfig { " +
+                    "\n " + testName +
                     "\n sub tree max depth: " + subTreeMaxDepth +
                     "\n population size: " + populationSize +
                     "\n elite count: " + eliteCount +
@@ -125,8 +136,10 @@ public abstract class EvolutionTest {
                     "\n operators: " + operators.toString() +
                     "\n random number generator: " + random.getClass().getSimpleName() +
                     "\n selection strategy: " + selectionStrategy.toString() +
-                    "\n}";
+                    "\n};";
         }
+
+
     }
 
 }

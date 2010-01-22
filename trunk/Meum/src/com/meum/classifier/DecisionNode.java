@@ -1,48 +1,43 @@
 package com.meum.classifier;
 
+import com.meum.classifier.decision.Decision;
 import org.uncommons.maths.random.Probability;
 
 import java.util.Random;
 
 public class DecisionNode implements TreeNode {
+    public static final int LEFT = 0;
+    public static final int RIGHT = 1;
+
     private TreeNode left;
     private TreeNode right;
-
-    private final int index;
-    private final double threshold;
+    private Decision decision;
 
     public DecisionNode(final TreeNode left,
                         final TreeNode right,
-                        final int index,
-                        final double threshold) {
+                        final Decision decision) {
         this.left = left;
         this.right = right;
-        this.index = index;
-        this.threshold = threshold;
+        this.decision = decision;
     }
 
     public Target evaluate(double[] programParameters) {
-        return programParameters[index] > threshold ?
-                left.evaluate(programParameters) :
-                right.evaluate(programParameters);
+        return getChild(decision.getSubTreeIndex(programParameters)).evaluate(programParameters);
     }
 
     public String print() {
         StringBuilder buffer = new StringBuilder("(");
-        buffer.append("arg");
-        buffer.append(index);
-        buffer.append(" > ");
-        buffer.append(threshold);
-        buffer.append(" ? (");
+        buffer.append(decision.toString());
+        buffer.append(") ? (");
         buffer.append(left.print());
-        buffer.append(" : ");
+        buffer.append(") : (");
         buffer.append(right.print());
         buffer.append(')');
         return buffer.toString();
     }
 
     public String getLabel() {
-        return print();
+        return decision.toString();
     }
 
     public int getArity() {
@@ -93,9 +88,9 @@ public class DecisionNode implements TreeNode {
         }
         int leftNodes = left.countNodes();
         if (index <= leftNodes) {
-            return new DecisionNode(left.replaceNode(index - 1, newNode), right, this.index, threshold);
+            return new DecisionNode(left.replaceNode(index - 1, newNode), right, this.decision);
         } else {
-            return new DecisionNode(left, right.replaceNode(index - leftNodes - 1, newNode), this.index, threshold);
+            return new DecisionNode(left, right.replaceNode(index - leftNodes - 1, newNode), this.decision);
         }
     }
 
@@ -107,11 +102,29 @@ public class DecisionNode implements TreeNode {
             TreeNode newLeft = left.mutate(rng, mutationProbability, treeFactory);
             TreeNode newRight = right.mutate(rng, mutationProbability, treeFactory);
             if (newLeft != left && newRight != right) {
-                return new DecisionNode(newLeft, newRight, index, threshold);
+                return new DecisionNode(newLeft, newRight, decision);
             } else {
                 // Tree has not changed.
                 return this;
             }
         }
+    }
+
+    public TreeNode simplify() {
+        if (this.left instanceof LeafNode && this.right instanceof LeafNode) {
+            LeafNode l = (LeafNode) left;
+            LeafNode r = (LeafNode) right;
+            if (l.getTarget() == r.getTarget()) {
+                return left;
+            }
+        }
+        else {
+            TreeNode simplifiedLeft = left.simplify();
+            TreeNode simplifiedRight = right.simplify();
+            if (!simplifiedLeft.equals(left) || !simplifiedRight.equals(right)) {
+                return new DecisionNode(simplifiedLeft, simplifiedRight, decision);
+            }
+        }
+        return this;
     }
 }
