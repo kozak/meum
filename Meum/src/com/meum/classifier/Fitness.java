@@ -46,8 +46,6 @@ public class Fitness implements FitnessEvaluator<TreeNode>, EvolutionObserver<Tr
 
     @Override
     public String toString() {
-        return "Fitness {" +
-                "\n The number of incorrectly classified instances."
-                +"\n}";
+        return "The number of incorrectly classified instances.";
     }
 }

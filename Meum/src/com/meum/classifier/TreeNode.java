@@ -28,4 +28,5 @@ public interface TreeNode {
 
     TreeNode mutate(Random rng, Probability mutationProbability, DecisionTreeFactory treeFactory);
 
+    TreeNode simplify();
 }

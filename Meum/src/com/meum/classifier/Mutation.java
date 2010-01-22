@@ -54,9 +54,7 @@ public class Mutation implements EvolutionaryOperator<TreeNode>, EvolutionObserv
 
     @Override
     public String toString() {
-        return "Mutation { probability: " + mutationProbability.toString() +
-                "\n ranges: " + Arrays.toString(ranges) +
-                "}";
+        return "Mutation(probability: " + mutationProbability.toString() + " ranges: " + Arrays.toString(ranges) + "}";
     }
 
     public static class Range {

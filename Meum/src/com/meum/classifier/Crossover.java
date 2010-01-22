@@ -35,4 +35,9 @@ public class Crossover extends AbstractCrossover<TreeNode> {
         offspring.add(offspring2);
         return offspring;
     }
+
+    @Override
+    public String toString() {
+        return "Crossover(sub tree switching)";
+    }
 }

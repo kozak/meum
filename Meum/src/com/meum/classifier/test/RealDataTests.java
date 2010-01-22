@@ -43,9 +43,11 @@ public class RealDataTests extends EvolutionTest {
                 new Mutation.Range(600,1000, 4)
         ));
         operators.add(new Crossover());
+        operators.add(new Simplification());
         final Fitness fitness = new Fitness(trainingData, 1000, 0.001);
-        final TerminationCondition[] conditions = {new GenerationCount(1000), new TargetFitness(2, false)};
-        final TestConfig config = new TestConfig(2, 1000, 20, conditions, fitness, operators, new MersenneTwisterRNG(), new RouletteWheelSelection());
+        final TerminationCondition[] conditions = {new GenerationCount(200), new TargetFitness(2, false)};
+        final TestConfig config = new TestConfig("Single market test",
+                2, 1000, 20, conditions, fitness, operators, new MersenneTwisterRNG(), new RouletteWheelSelection());
         evolve(config, trainingData, null);
     }
 }

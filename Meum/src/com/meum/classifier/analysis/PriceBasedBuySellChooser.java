@@ -55,7 +55,7 @@ public class PriceBasedBuySellChooser {
             }
 
         }
-        return Target.CANT_TOUCH_THIS;
+        return Target.EVIL;
     }
 
 }

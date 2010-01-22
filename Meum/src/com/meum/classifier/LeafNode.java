@@ -23,6 +23,10 @@ public class LeafNode implements TreeNode {
         return target.toString();
     }
 
+    public Target getTarget() {
+        return target;
+    }
+
     public int getArity() {
         return 0;
     }
@@ -64,5 +68,9 @@ public class LeafNode implements TreeNode {
             // Node is unchanged.
             return this;
         }
+    }
+
+    public TreeNode simplify() {
+        return this;
     }
 }

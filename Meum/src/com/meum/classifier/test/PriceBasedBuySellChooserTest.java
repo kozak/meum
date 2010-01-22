@@ -23,7 +23,7 @@ public class PriceBasedBuySellChooserTest {
                         MessageFormat.format("{0} target: {1}", Arrays.toString(doubles), trainingData.get(doubles)));
             }
             else {
-                assertTrue(trainingData.get(doubles) == Target.CANT_TOUCH_THIS,
+                assertTrue(trainingData.get(doubles) == Target.EVIL,
                         MessageFormat.format("{0} target: {1}", Arrays.toString(doubles), trainingData.get(doubles)));
             }
         }
@@ -41,7 +41,7 @@ public class PriceBasedBuySellChooserTest {
                         MessageFormat.format("{0} target: {1}", Arrays.toString(doubles), trainingData.get(doubles)));
             }
             else {
-                assertTrue(trainingData.get(doubles) == Target.CANT_TOUCH_THIS,
+                assertTrue(trainingData.get(doubles) == Target.EVIL,
                         MessageFormat.format("{0} target: {1}", Arrays.toString(doubles), trainingData.get(doubles)));
             }
         }
@@ -59,7 +59,7 @@ public class PriceBasedBuySellChooserTest {
                         MessageFormat.format("{0} target: {1}", Arrays.toString(doubles), trainingData.get(doubles)));
             }
             else {
-                assertTrue(trainingData.get(doubles) == Target.CANT_TOUCH_THIS,
+                assertTrue(trainingData.get(doubles) == Target.EVIL,
                         MessageFormat.format("{0} target: {1}", Arrays.toString(doubles), trainingData.get(doubles)));
             }
         }
