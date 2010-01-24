@@ -12,6 +12,7 @@ public class DecisionNode implements TreeNode {
     private TreeNode left;
     private TreeNode right;
     private Decision decision;
+    private double baseFitness;
 
 
     public DecisionNode(final TreeNode left,
@@ -40,6 +41,14 @@ public class DecisionNode implements TreeNode {
 
     public String getLabel() {
         return decision.toString();
+    }
+
+    public void setBaseFitness(double fitness) {
+        this.baseFitness = fitness;
+    }
+
+    public double getBaseFitness() {
+        return baseFitness;
     }
 
     public int getArity() {

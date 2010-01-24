@@ -43,8 +43,27 @@ public class ArtificialDataTests extends EvolutionTest {
                 new MersenneTwisterRNG(),
                 new RouletteWheelSelection());
 
-        evolve(factory, config, data, null);
+        evolve(factory, config, null);
     }
 
+    @Test
+    public void ensembleTest() throws IOException {
+        final Map<double[], Target> data = TEST_DATA;
+        final DecisionTreeFactory factory = new DecisionTreeFactory(data, 2);
+        final List<EvolutionaryOperator<TreeNode>> operators = new ArrayList<EvolutionaryOperator<TreeNode>>();
+        operators.add(new Mutation(Probability.EVENS, factory));
+        operators.add(new Simplification());
+        final TestConfig config = new TestConfig("Basic test to check everything is up and runnning",
+                2, 1000, 20, new TerminationCondition[]{
+                        new TargetFitness(0, false),
+                        new GenerationCount(1000)},
+                new Fitness(data),
+                operators,
+                Collections.<EvolutionObserver<TreeNode>>emptyList(),
+                new MersenneTwisterRNG(),
+                new RouletteWheelSelection());
+
+        evolvePopulation(factory, config, null);
+    }
 
 }

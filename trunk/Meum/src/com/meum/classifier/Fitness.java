@@ -2,6 +2,7 @@ package com.meum.classifier;
 
 import com.meum.classifier.bias.fitness.ConstModifier;
 import com.meum.classifier.bias.fitness.FitnessModifier;
+import org.uncommons.watchmaker.framework.EvaluatedCandidate;
 import org.uncommons.watchmaker.framework.EvolutionObserver;
 import org.uncommons.watchmaker.framework.FitnessEvaluator;
 import org.uncommons.watchmaker.framework.PopulationData;
@@ -25,25 +26,53 @@ public class Fitness implements FitnessEvaluator<TreeNode> {
         this.fitnessModifier = new ConstModifier();
     }
 
-    public Map<double[], Target> getData() {
-        return data;
-    }
-
-
     public double getFitness(final TreeNode candidate, final List<? extends TreeNode> population) {
-        double error = getBaseFitness(candidate);
+        double error = getBaseFitness(data, candidate);
         error = fitnessModifier.adjustFitness(error, candidate, population);
         return error;
     }
 
-    protected double getBaseFitness(TreeNode candidate) {
+    public static double getBaseFitness(final Map<double[], Target> data, TreeNode candidate) {
         double error = 0;
         for (Map.Entry<double[], Target> entry : data.entrySet()) {
             Target targetClass = candidate.evaluate(entry.getKey());
             error += (targetClass == entry.getValue() ? 0 : 1);
         }
+        candidate.setBaseFitness(error);
         return error;
     }
+
+    public double getEnsembleFitness(List<EvaluatedCandidate<TreeNode>> population) {
+        double error = 0;
+
+        for (Map.Entry<double[], Target> entry : data.entrySet()) {
+            Target ensemble = getEnsembleDecision(population, entry.getKey());
+            error += ensemble.equals(entry.getValue()) ? 0 : 1;
+        }
+        return error;
+    }
+
+    public Target getEnsembleDecision(List<EvaluatedCandidate<TreeNode>> population, double[] data) {
+        int buy = 0;
+        int sell = 0;
+        int evil = 0;
+        for (EvaluatedCandidate<TreeNode> candidate : population) {
+            Target targetClass = candidate.getCandidate().evaluate(data);
+            switch (targetClass) {
+                case BUY:
+                    buy++;
+                    break;
+                case SELL:
+                    sell++;
+                    break;
+                case EVIL:
+                    evil++;
+                    break;
+            }
+        }
+        return getTarget(buy, sell, evil);
+    }
+
 
     public EnsembleFitness getEnsembleFitness(final TreeNode excluded, final List<? extends TreeNode> population) {
         double error = 0;
@@ -68,17 +97,19 @@ public class Fitness implements FitnessEvaluator<TreeNode> {
                 }
             }
             Target ensemble = getTarget(buy, sell, evil);
-            Target targetClass = excluded.evaluate(entry.getKey());
-            switch (targetClass) {
-                case BUY:
-                    buy--;
-                    break;
-                case SELL:
-                    sell--;
-                    break;
-                case EVIL:
-                    evil--;
-                    break;
+            if (excluded != null) {
+                Target targetClass = excluded.evaluate(entry.getKey());
+                switch (targetClass) {
+                    case BUY:
+                        buy--;
+                        break;
+                    case SELL:
+                        sell--;
+                        break;
+                    case EVIL:
+                        evil--;
+                        break;
+                }
             }
             Target ensembleExcluded = getTarget(buy, sell, evil);
             error += ensemble.equals(entry.getValue()) ? 0 : 1;
@@ -107,6 +138,7 @@ public class Fitness implements FitnessEvaluator<TreeNode> {
     public String toString() {
         return "The number of incorrectly classified instances.";
     }
+
 
     public static class EnsembleFitness {
         private double ensemble;
