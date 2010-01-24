@@ -5,7 +5,6 @@ import com.meum.classifier.TreeNode;
 import java.util.List;
 
 public class HeightBasedModifier extends FitnessModifier {
-
     @Override
     public double adjustFitness(double fitness, TreeNode candidate, List<? extends TreeNode> population) {
         if (populationData != null) {
@@ -13,4 +12,6 @@ public class HeightBasedModifier extends FitnessModifier {
         }
         return fitness;
     }
+
+
 }
