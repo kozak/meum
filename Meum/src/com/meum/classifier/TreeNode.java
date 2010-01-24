@@ -12,6 +12,7 @@ public interface TreeNode {
 
     String getLabel();
 
+
     int getArity();
 
     int getDepth();

@@ -13,6 +13,7 @@ public class DecisionNode implements TreeNode {
     private TreeNode right;
     private Decision decision;
 
+
     public DecisionNode(final TreeNode left,
                         final TreeNode right,
                         final Decision decision) {
@@ -20,6 +21,7 @@ public class DecisionNode implements TreeNode {
         this.right = right;
         this.decision = decision;
     }
+
 
     public Target evaluate(double[] programParameters) {
         return getChild(decision.getSubTreeIndex(programParameters)).evaluate(programParameters);
@@ -102,7 +104,7 @@ public class DecisionNode implements TreeNode {
             TreeNode newLeft = left.mutate(rng, mutationProbability, treeFactory);
             TreeNode newRight = right.mutate(rng, mutationProbability, treeFactory);
             if (newLeft != left && newRight != right) {
-                return new DecisionNode(newLeft, newRight, decision);
+                return new DecisionNode( newLeft, newRight, decision);
             } else {
                 // Tree has not changed.
                 return this;
@@ -111,20 +113,19 @@ public class DecisionNode implements TreeNode {
     }
 
     public TreeNode simplify() {
-        if (this.left instanceof LeafNode && this.right instanceof LeafNode) {
-            LeafNode l = (LeafNode) left;
-            LeafNode r = (LeafNode) right;
-            if (l.getTarget() == r.getTarget()) {
-                return left;
+        TreeNode simplifiedLeft = left.simplify();
+        TreeNode simplifiedRight = right.simplify();
+
+        if (simplifiedLeft instanceof LeafNode && simplifiedRight instanceof LeafNode) {
+            LeafNode l = (LeafNode) simplifiedLeft;
+            LeafNode r = (LeafNode) simplifiedRight;
+            if (l.getTarget().equals(r.getTarget())) {
+                return new LeafNode(l.getTarget());
             }
         }
-        else {
-            TreeNode simplifiedLeft = left.simplify();
-            TreeNode simplifiedRight = right.simplify();
-            if (!simplifiedLeft.equals(left) || !simplifiedRight.equals(right)) {
-                return new DecisionNode(simplifiedLeft, simplifiedRight, decision);
-            }
+        if (simplifiedLeft.equals(left) && simplifiedRight.equals(right)) {
+            return this;
         }
-        return this;
+        return new DecisionNode(simplifiedLeft, simplifiedRight, decision);
     }
 }

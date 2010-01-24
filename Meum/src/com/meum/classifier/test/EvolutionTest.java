@@ -13,12 +13,11 @@ import java.util.*;
 public abstract class EvolutionTest {
 
     @SuppressWarnings("unchecked")
-    public static TreeNode evolve(final TestConfig config,
+    public static TreeNode evolve(final DecisionTreeFactory factory, 
+                                  final TestConfig config,
                                   final Map<double[], Target> trainingData,
                                   final EngineInitializer initializer) throws IOException {
         log(config);
-        final int depth = config.getSubTreeMaxDepth();
-        DecisionTreeFactory factory = new DecisionTreeFactory(trainingData, depth);
         List<EvolutionaryOperator<TreeNode>> operators = config.getOperators();
         Fitness fitness = config.getFitness();
         EvolutionEngine<TreeNode> engine = new GenerationalEvolutionEngine<TreeNode>(factory,
@@ -26,7 +25,12 @@ public abstract class EvolutionTest {
                 fitness,
                 config.getSelectionStrategy(),
                 config.getRandom());
+        final List<EvolutionObserver<TreeNode>> evolutionObserverList = config.getObservers();
+        for (EvolutionObserver<TreeNode> treeNodeEvolutionObserver : evolutionObserverList) {
+            engine.addEvolutionObserver(treeNodeEvolutionObserver);
+        }
         engine.addEvolutionObserver(new EvolutionLogger());
+        
         if (initializer != null) {
             initializer.initialise(engine);
         }
@@ -38,9 +42,10 @@ public abstract class EvolutionTest {
         return treeNode;
     }
 
-    public static TreeNode evolve(final TestConfig config,
+    public static TreeNode evolve(final DecisionTreeFactory factory,
+                                  final TestConfig config,
                                   final Map<double[], Target> trainingData) throws IOException {
-        return evolve(config, trainingData, null);
+        return evolve(factory, config, trainingData, null);
     }
 
 
@@ -65,6 +70,7 @@ public abstract class EvolutionTest {
         TerminationCondition[] terminationConditions;
         Fitness fitness;
         List<EvolutionaryOperator<TreeNode>> operators;
+        List<EvolutionObserver<TreeNode>> observers;
         Random random;
         SelectionStrategy selectionStrategy;
         private String testName;
@@ -75,6 +81,7 @@ public abstract class EvolutionTest {
                           int eliteCount,
                           TerminationCondition[] terminationConditions,
                           Fitness fitness, List<EvolutionaryOperator<TreeNode>> operators,
+                          List<EvolutionObserver<TreeNode>> observers,
                           Random random,
                           SelectionStrategy selectionStrategy) {
             this.testName = testName;
@@ -86,6 +93,7 @@ public abstract class EvolutionTest {
             this.operators = operators;
             this.random = random;
             this.selectionStrategy = selectionStrategy;
+            this.observers = observers;
         }
 
         public int getSubTreeMaxDepth() {
@@ -124,6 +132,10 @@ public abstract class EvolutionTest {
             return testName;
         }
 
+        public List<EvolutionObserver<TreeNode>> getObservers() {
+            return observers;
+        }
+
         @Override
         public String toString() {
             return "TestConfig { " +
@@ -134,6 +146,7 @@ public abstract class EvolutionTest {
                     "\n termination conditions: " + Arrays.toString(terminationConditions) +
                     "\n fitness: " + fitness.toString() +
                     "\n operators: " + operators.toString() +
+                    "\n observers: " + observers.toString() +
                     "\n random number generator: " + random.getClass().getSimpleName() +
                     "\n selection strategy: " + selectionStrategy.toString() +
                     "\n};";

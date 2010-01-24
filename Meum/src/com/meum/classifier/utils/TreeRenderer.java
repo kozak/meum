@@ -30,8 +30,8 @@ public class TreeRenderer implements org.uncommons.watchmaker.framework.interact
 
 
     private static final class EATreeView extends JComponent {
-        // Allow 30 pixels for each node horizontally.
-        private static final int NODE_WIDTH = 50;
+        // Allow 50 pixels for each node horizontally.
+        private static final int NODE_WIDTH = 70;
         // Allow 50 pixels for each node vertically.
         private static final int NODE_HEIGHT = 50;
         private static final int CIRCLE_RADIUS = 9;
