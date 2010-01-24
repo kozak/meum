@@ -8,14 +8,19 @@ import org.uncommons.watchmaker.framework.*;
 import org.uncommons.watchmaker.framework.operators.EvolutionPipeline;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 import java.util.*;
 
 public abstract class EvolutionTest {
 
+    protected String getName(String name)  {
+        final int currentInvocationCount = Reporter.getCurrentTestResult().getMethod().getCurrentInvocationCount();
+        return name + " #" + currentInvocationCount;
+    }
+
     @SuppressWarnings("unchecked")
-    public static TreeNode evolve(final DecisionTreeFactory factory, 
+    public static TreeNode evolve(final DecisionTreeFactory factory,
                                   final TestConfig config,
-                                  final Map<double[], Target> trainingData,
                                   final EngineInitializer initializer) throws IOException {
         log(config);
         List<EvolutionaryOperator<TreeNode>> operators = config.getOperators();
@@ -29,25 +34,59 @@ public abstract class EvolutionTest {
         for (EvolutionObserver<TreeNode> treeNodeEvolutionObserver : evolutionObserverList) {
             engine.addEvolutionObserver(treeNodeEvolutionObserver);
         }
-        engine.addEvolutionObserver(new EvolutionLogger());
-        
+        //engine.addEvolutionObserver(new EvolutionLogger());
+
         if (initializer != null) {
             initializer.initialise(engine);
         }
         final TreeNode treeNode = engine.evolve(config.getPopulationSize(),
                 config.getEliteCount(),
                 config.getTerminationConditions());
+
         log(treeNode.print());
+        log("Base fitness: " + treeNode.getBaseFitness());
         ImageWriter.save(config.getTestName(), new TreeRenderer().render(treeNode));
         return treeNode;
     }
 
-    public static TreeNode evolve(final DecisionTreeFactory factory,
-                                  final TestConfig config,
-                                  final Map<double[], Target> trainingData) throws IOException {
-        return evolve(factory, config, trainingData, null);
+    @SuppressWarnings("unchecked")
+    public static List<EvaluatedCandidate<TreeNode>> evolvePopulation(final DecisionTreeFactory factory,
+                                                                      final TestConfig config,
+                                                                      final EngineInitializer initializer) throws IOException {
+        log(config);
+        List<EvolutionaryOperator<TreeNode>> operators = config.getOperators();
+        Fitness fitness = config.getFitness();
+        EvolutionEngine<TreeNode> engine = new GenerationalEvolutionEngine<TreeNode>(factory,
+                new EvolutionPipeline<TreeNode>(operators),
+                fitness,
+                config.getSelectionStrategy(),
+                config.getRandom());
+        final List<EvolutionObserver<TreeNode>> evolutionObserverList = config.getObservers();
+        for (EvolutionObserver<TreeNode> treeNodeEvolutionObserver : evolutionObserverList) {
+            engine.addEvolutionObserver(treeNodeEvolutionObserver);
+        }
+        //engine.addEvolutionObserver(new EvolutionLogger());
+
+        if (initializer != null) {
+            initializer.initialise(engine);
+        }
+
+        final List<EvaluatedCandidate<TreeNode>> population = engine.evolvePopulation(config.getPopulationSize(),
+                config.getEliteCount(),
+                config.getTerminationConditions());
+        log("Base fitness: " + fitness.getEnsembleFitness(population));
+        return population;
     }
 
+    public static TreeNode evolve(final DecisionTreeFactory factory,
+                                  final TestConfig config) throws IOException {
+        return evolve(factory, config, null);
+    }
+
+    public static List<EvaluatedCandidate<TreeNode>> evolvePopulation(final DecisionTreeFactory factory,
+                                                                      final TestConfig config) throws IOException {
+        return evolvePopulation(factory, config, null);
+    }
 
     public static void log(final Object toLog) {
         Reporter.log(toLog.toString(), true);
@@ -55,7 +94,9 @@ public abstract class EvolutionTest {
 
     private static class EvolutionLogger implements EvolutionObserver<TreeNode> {
         public void populationUpdate(PopulationData<? extends TreeNode> data) {
-            log("Generation " + data.getGenerationNumber() + ": " + data.getBestCandidateFitness());
+            final double baseFitness = data.getBestCandidate().getBaseFitness();
+            log(MessageFormat.format("Generation {0}; Base fitness: {1} Modified fitness: {2}",
+                    data.getGenerationNumber(), baseFitness, data.getBestCandidateFitness()));
         }
     }
 

@@ -6,6 +6,7 @@ import java.util.Random;
 
 public class LeafNode implements TreeNode {
     private final Target target;
+    private double baseFitness;
 
     public LeafNode(final Target target) {
         this.target = target;
@@ -41,6 +42,14 @@ public class LeafNode implements TreeNode {
 
     public int countNodes() {
         return 1;
+    }
+
+    public void setBaseFitness(double fitness) {
+        this.baseFitness = fitness;
+    }
+
+    public double getBaseFitness() {
+        return baseFitness;
     }
 
     public TreeNode getNode(int index) {

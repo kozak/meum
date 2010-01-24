@@ -12,6 +12,9 @@ public interface TreeNode {
 
     String getLabel();
 
+    void setBaseFitness(double fitness);
+
+    double getBaseFitness();
 
     int getArity();
 
