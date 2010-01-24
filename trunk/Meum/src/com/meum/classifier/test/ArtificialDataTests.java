@@ -12,10 +12,7 @@ import org.uncommons.watchmaker.framework.termination.GenerationCount;
 import org.uncommons.watchmaker.framework.termination.TargetFitness;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class ArtificialDataTests extends EvolutionTest {
     private static final Map<double[], Target> TEST_DATA = new HashMap<double[], Target>();
@@ -38,14 +35,15 @@ public class ArtificialDataTests extends EvolutionTest {
         operators.add(new Simplification());
         final TestConfig config = new TestConfig("Basic test to check everything is up and runnning",
                 2, 1000, 20, new TerminationCondition[]{
-                new TargetFitness(0, false),
-                new GenerationCount(1000)},
-                new Fitness(data, 500, 0.001),
+                        new TargetFitness(0, false),
+                        new GenerationCount(1000)},
+                new Fitness(data),
                 operators,
+                Collections.<EvolutionObserver<TreeNode>>emptyList(),
                 new MersenneTwisterRNG(),
                 new RouletteWheelSelection());
 
-        evolve(config, data, null);
+        evolve(factory, config, data, null);
     }
 
 

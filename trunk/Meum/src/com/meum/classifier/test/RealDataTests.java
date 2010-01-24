@@ -2,17 +2,14 @@ package com.meum.classifier.test;
 
 import com.meum.classifier.*;
 import com.meum.classifier.analysis.PriceBasedBuySellChooser;
+import com.meum.classifier.bias.fitness.HeightBasedModifier;
+import com.meum.classifier.bias.mutation.RangeBiasModifier;
 import com.meum.classifier.utils.CsvReader;
 import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import org.uncommons.maths.random.MersenneTwisterRNG;
 import org.uncommons.maths.random.Probability;
-import org.uncommons.watchmaker.framework.EvolutionEngine;
-import org.uncommons.watchmaker.framework.EvolutionaryOperator;
-import org.uncommons.watchmaker.framework.GenerationalEvolutionEngine;
-import org.uncommons.watchmaker.framework.TerminationCondition;
-import org.uncommons.watchmaker.framework.operators.EvolutionPipeline;
+import org.uncommons.watchmaker.framework.*;
 import org.uncommons.watchmaker.framework.selection.RouletteWheelSelection;
 import org.uncommons.watchmaker.framework.termination.GenerationCount;
 import org.uncommons.watchmaker.framework.termination.TargetFitness;
@@ -37,17 +34,31 @@ public class RealDataTests extends EvolutionTest {
         final Map<double[],Target> trainingData = chooser.getTrainingData(15, 0.005, 15);
         DecisionTreeFactory factory = new DecisionTreeFactory(trainingData, 2);
         List<EvolutionaryOperator<TreeNode>> operators = new ArrayList<EvolutionaryOperator<TreeNode>>(2);
-        operators.add(new Mutation(new Probability(0.6), factory, new Mutation.Range(200,300, 1),
-                new Mutation.Range(300,500, 2),
-                new Mutation.Range(500,600, 3),
-                new Mutation.Range(600,1000, 4)
-        ));
+        final RangeBiasModifier mutationModifier = new RangeBiasModifier(
+                new RangeBiasModifier.Range(0, 50, 0),
+                new RangeBiasModifier.Range(50, 100, 1),
+                new RangeBiasModifier.Range(100, 150, 0),
+                new RangeBiasModifier.Range(150, 200, 2)
+        );
+        operators.add(new Mutation(new Probability(0.6), factory, mutationModifier));
         operators.add(new Crossover());
         operators.add(new Simplification());
-        final Fitness fitness = new Fitness(trainingData, 1000, 0.001);
+
+        final HeightBasedModifier heightBasedFitnessModifier = new HeightBasedModifier();
+        final Fitness fitness = new Fitness(trainingData, heightBasedFitnessModifier);
+
+        List<EvolutionObserver<TreeNode>> observers = new ArrayList<EvolutionObserver<TreeNode>>(1);
+        observers.add(mutationModifier);
+        observers.add(heightBasedFitnessModifier);
+
         final TerminationCondition[] conditions = {new GenerationCount(200), new TargetFitness(2, false)};
         final TestConfig config = new TestConfig("Single market test",
-                2, 1000, 20, conditions, fitness, operators, new MersenneTwisterRNG(), new RouletteWheelSelection());
-        evolve(config, trainingData, null);
+                2, 1000, 20, conditions,
+                fitness, 
+                operators,
+                observers,
+                new MersenneTwisterRNG(),
+                new RouletteWheelSelection());
+        evolve(factory, config, trainingData, null);
     }
 }

@@ -6,13 +6,11 @@ import com.meum.classifier.Target;
 import java.text.MessageFormat;
 import java.util.*;
 
-public class ThresholdDecision implements Decision {
-    private static final Map<Map<double[], Target>, Set<Integer>> USED_INDICIES = new HashMap<Map<double[],Target>, Set<Integer>>();
-
+public class Threshold implements Decision {
     private final double threshold;
     private final int paramIndex;
 
-    public ThresholdDecision(final Map<double[], Target> trainingData, final Random rng) {
+    public Threshold(final Map<double[], Target> trainingData, final Random rng) {
         final Set<double[]> values = trainingData.keySet();
         int whichValue = rng.nextInt(values.size());
         final Iterator<double[]> iterator = values.iterator();
@@ -29,6 +27,23 @@ public class ThresholdDecision implements Decision {
 
     public int getSubTreeIndex(double[] programParameters) {
         return programParameters[paramIndex] > threshold ? DecisionNode.LEFT : DecisionNode.RIGHT;
+    }
+
+    @Override
+    public int hashCode() {
+        return super.hashCode();    //To change body of overridden methods use File | Settings | File Templates.
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Threshold) {
+            Threshold t = (Threshold) obj;
+            return t.paramIndex == this.paramIndex;
+        }
+        throw new IllegalStateException(
+                MessageFormat.format("Wrong object passed for equality testing, expected: {0} got: {1}",
+                        this.getClass().getName(), obj.getClass().getName()));
+        
     }
 
     @Override

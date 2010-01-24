@@ -5,9 +5,9 @@ import org.uncommons.maths.random.Probability;
 import java.util.Random;
 
 public class LeafNode implements TreeNode {
-    private Target target;
+    private final Target target;
 
-    public LeafNode(Target target) {
+    public LeafNode(final Target target) {
         this.target = target;
     }
 
