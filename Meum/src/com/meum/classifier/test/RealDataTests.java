@@ -8,6 +8,7 @@ import com.meum.classifier.bias.mutation.ConstModifier;
 import com.meum.classifier.bias.mutation.RangeBiasModifier;
 import com.meum.classifier.utils.CsvReader;
 import org.testng.Reporter;
+import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
@@ -31,17 +32,23 @@ public class RealDataTests extends EvolutionTest {
         reader = CsvReader.getInstance();
     }
 
+    @AfterTest
+    public void afterTest() {
+        System.gc();
+    }
+
     @DataProvider(name = "marketDataProvider")
     public Object[][] marketDataProvider() {
         return new Object[][] {
-                new Object[] {"audeur"},
                 new Object[] {"chfeur"},
-                new Object[] {"gbpeur"}
+                new Object[] {"audeur"},
+                new Object[] {"gbpeur"},
+                new Object[] {"cadeur"}
         };
     }
 
 
-    @Test(dataProvider = "marketDataProvider", invocationCount = 5)
+    @Test(dataProvider = "marketDataProvider", invocationCount = 2)
     public void testSingleMarket(final String marketName) throws IOException {
         final double[] prices = reader.read(marketName);
         final PriceBasedBuySellChooser chooser = new PriceBasedBuySellChooser(prices);
@@ -78,7 +85,7 @@ public class RealDataTests extends EvolutionTest {
 
 
 
-    @Test(dataProvider = "marketDataProvider", invocationCount = 5)
+    @Test(dataProvider = "marketDataProvider", invocationCount = 2)
     public void testEnsembleSingleMarket(final String marketName) throws IOException {
         final double[] prices = reader.read(marketName);
         final PriceBasedBuySellChooser chooser = new PriceBasedBuySellChooser(prices);
@@ -107,7 +114,7 @@ public class RealDataTests extends EvolutionTest {
         evolve(factory, config, null);
     }
 
-    @Test(dataProvider = "marketDataProvider", invocationCount = 5)
+    @Test(dataProvider = "marketDataProvider", invocationCount = 2)
     public void testPopulationSingleMarket(final String marketName) throws IOException {
         final double[] prices = reader.read(marketName);
         final PriceBasedBuySellChooser chooser = new PriceBasedBuySellChooser(prices);
@@ -128,7 +135,7 @@ public class RealDataTests extends EvolutionTest {
 
         final TerminationCondition[] conditions = {new GenerationCount(1000), new TargetFitness(2, false)};
         final TestConfig config = new TestConfig(getName(marketName + " - population evolution, "),
-                2, 1000, 20, conditions,
+                2, 200, 20, conditions,
                 fitness,
                 operators,
                 observers,

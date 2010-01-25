@@ -36,8 +36,14 @@ public final class CsvReader {
         final List<String[]> strings = reader.readAll();
         final double[] data = new double[strings.size()];
         for (int i = 0; i < data.length; i++) {
+            if (strings.get(i).length != 2) {
+                throw new IllegalStateException("The csv file doesn't contain price data in the correct format, " +
+                        "or there is a newline at the end of file");
+            }
             data[i] = Double.parseDouble(strings.get(i)[MARKET_PRICE_POSITION]);
         }
+        cache.put(name, data);
+        reader.close();
         return data;
     }
 
