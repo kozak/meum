@@ -15,9 +15,10 @@ public class ImageWriter {
             System.out.println("Can't save image of this size, width: " + size.getWidth() + "; height: " + size.getHeight());
             return;
         }
-        final BufferedImage image = new BufferedImage((int)size.getWidth(),
-                (int)size.getHeight(), BufferedImage.TYPE_INT_RGB);
+        final BufferedImage image = new BufferedImage((int) size.getWidth(),
+                (int) size.getHeight(), BufferedImage.TYPE_INT_RGB);
         component.paint(image.getGraphics());
-        ImageIO.write(image, "jpg", new File(name+".jpg"));
+        final File output = new File("tests/images/" + name + ".jpg");
+        ImageIO.write(image, "jpg", output);
     }
 }

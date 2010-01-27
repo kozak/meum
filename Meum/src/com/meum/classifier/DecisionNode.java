@@ -3,6 +3,8 @@ package com.meum.classifier;
 import com.meum.classifier.decision.Decision;
 import org.uncommons.maths.random.Probability;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 public class DecisionNode implements TreeNode {
@@ -23,6 +25,9 @@ public class DecisionNode implements TreeNode {
         this.decision = decision;
     }
 
+    public Decision getDecision() {
+        return decision;
+    }
 
     public Target evaluate(double[] programParameters) {
         return getChild(decision.getSubTreeIndex(programParameters)).evaluate(programParameters);
@@ -113,7 +118,7 @@ public class DecisionNode implements TreeNode {
             TreeNode newLeft = left.mutate(rng, mutationProbability, treeFactory);
             TreeNode newRight = right.mutate(rng, mutationProbability, treeFactory);
             if (newLeft != left && newRight != right) {
-                return new DecisionNode( newLeft, newRight, decision);
+                return new DecisionNode(newLeft, newRight, decision);
             } else {
                 // Tree has not changed.
                 return this;
@@ -121,9 +126,16 @@ public class DecisionNode implements TreeNode {
         }
     }
 
-    public TreeNode simplify() {
-        TreeNode simplifiedLeft = left.simplify();
-        TreeNode simplifiedRight = right.simplify();
+    public TreeNode simplify(Map<Decision, Integer> params) {
+        if (params.containsKey(decision)) {
+            return getChild(params.get(decision)).simplify(params);
+        }
+        Map<Decision,Integer> paramsLeft = new HashMap<Decision,Integer>(params);
+        Map<Decision,Integer> paramsRight = new HashMap<Decision,Integer>(params);
+        paramsLeft.put(decision, 0);
+        paramsRight.put(decision, 1);
+        TreeNode simplifiedLeft = left.simplify(paramsLeft);
+        TreeNode simplifiedRight = right.simplify(paramsRight);
 
         if (simplifiedLeft instanceof LeafNode && simplifiedRight instanceof LeafNode) {
             LeafNode l = (LeafNode) simplifiedLeft;

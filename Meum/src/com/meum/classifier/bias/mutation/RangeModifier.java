@@ -7,10 +7,10 @@ import java.text.MessageFormat;
 import java.util.Arrays;
 import java.util.Random;
 
-public class RangeBiasModifier extends MutationModifier {
+public class RangeModifier extends MutationModifier {
     private Range[] ranges;
 
-    public RangeBiasModifier(Range ...ranges) {
+    public RangeModifier(Range ...ranges) {
         this.ranges = ranges;
     }
 

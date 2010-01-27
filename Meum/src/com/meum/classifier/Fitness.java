@@ -1,34 +1,43 @@
 package com.meum.classifier;
 
-import com.meum.classifier.bias.fitness.ConstModifier;
 import com.meum.classifier.bias.fitness.FitnessModifier;
+import com.meum.classifier.bias.fitness.NoOpModifier;
 import org.uncommons.watchmaker.framework.EvaluatedCandidate;
-import org.uncommons.watchmaker.framework.EvolutionObserver;
 import org.uncommons.watchmaker.framework.FitnessEvaluator;
-import org.uncommons.watchmaker.framework.PopulationData;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
 public class Fitness implements FitnessEvaluator<TreeNode> {
     private final Map<double[], Target> data;
-    private final FitnessModifier fitnessModifier;
+    private final FitnessModifier[] fitnessModifiers;
 
     public Fitness(final Map<double[], Target> data,
-                   final FitnessModifier fitnessModifier) {
+                   final FitnessModifier... fitnessModifiers) {
         this.data = data;
-        this.fitnessModifier = fitnessModifier;
-        this.fitnessModifier.setFitness(this);
+        this.fitnessModifiers = fitnessModifiers;
+        if (fitnessModifiers != null) {
+            for (FitnessModifier modifier : fitnessModifiers) {
+                modifier.setFitness(this);
+            }
+        }
     }
 
     public Fitness(final Map<double[], Target> data) {
         this.data = data;
-        this.fitnessModifier = new ConstModifier();
+        this.fitnessModifiers = new FitnessModifier[]{new NoOpModifier()};
+    }
+
+    public Map<double[], Target> getData() {
+        return data;
     }
 
     public double getFitness(final TreeNode candidate, final List<? extends TreeNode> population) {
         double error = getBaseFitness(data, candidate);
-        error = fitnessModifier.adjustFitness(error, candidate, population);
+        for (FitnessModifier fitnessModifier : fitnessModifiers) {
+            error = fitnessModifier.adjustFitness(error, candidate, population);
+        }
         return error;
     }
 
@@ -42,7 +51,7 @@ public class Fitness implements FitnessEvaluator<TreeNode> {
         return error;
     }
 
-    public double getEnsembleFitness(List<EvaluatedCandidate<TreeNode>> population) {
+    public static double getEnsembleFitness(final Map<double[], Target> data, List<EvaluatedCandidate<TreeNode>> population) {
         double error = 0;
 
         for (Map.Entry<double[], Target> entry : data.entrySet()) {
@@ -52,7 +61,7 @@ public class Fitness implements FitnessEvaluator<TreeNode> {
         return error;
     }
 
-    public Target getEnsembleDecision(List<EvaluatedCandidate<TreeNode>> population, double[] data) {
+    public static Target getEnsembleDecision(List<EvaluatedCandidate<TreeNode>> population, double[] data) {
         int buy = 0;
         int sell = 0;
         int evil = 0;
@@ -119,7 +128,7 @@ public class Fitness implements FitnessEvaluator<TreeNode> {
 
     }
 
-    private Target getTarget(int buy, int sell, int evil) {
+    private static Target getTarget(int buy, int sell, int evil) {
         Target classifiedAs = Target.EVIL;
         if (buy > sell && buy > evil) {
             classifiedAs = Target.BUY;
@@ -136,7 +145,7 @@ public class Fitness implements FitnessEvaluator<TreeNode> {
 
     @Override
     public String toString() {
-        return "The number of incorrectly classified instances.";
+        return "The number of incorrectly classified instances. " + Arrays.toString(fitnessModifiers);
     }
 
 

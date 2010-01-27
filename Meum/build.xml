@@ -83,7 +83,7 @@
     </macrodef>
 
 
-    <target name="compile">
+    <target name="compile" depends="clean">
         <compile.module module.name="meum"/>
     </target>
 
@@ -91,6 +91,8 @@
         <delete dir="build"/>
         <delete dir="tests"/>
         <delete dir="test-output"/>
+        <mkdir dir="tests/images"/>
+        <mkdir dir="tests/summary"/>
     </target>
 
 
@@ -99,11 +101,12 @@
                 outputdir="tests"
                 haltonfailure="true"
                 suitename="Classifier"
+                testname="Classifier tests"
                 useDefaultListeners="false"
                 listeners="org.uncommons.reportng.HTMLReporter">
             <classfileset dir="build/classes"/>
             <sysproperty key="org.uncommons.reportng.title" value="Classifier results"/>
-            <jvmarg value="-Xmx768m"/>
+            <jvmarg value="-Xmx256m"/>
             <jvmarg value="-XX:MaxPermSize=128m"/>
         </testng>
     </target>

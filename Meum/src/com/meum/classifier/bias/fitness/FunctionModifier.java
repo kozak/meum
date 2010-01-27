@@ -10,8 +10,13 @@ public class FunctionModifier extends FitnessModifier {
 
     public FunctionModifier() {
         function = new Function() {
-            public double evaluate(PopulationData<? extends TreeNode> populationData) {
+            public double evaluate(TreeNode candidate, PopulationData<? extends TreeNode> populationData) {
                 return Math.abs(Math.sin(populationData.getGenerationNumber()));
+            }
+
+            @Override
+            public String toString() {
+                return "abs(sin(generationNumber))";
             }
         };
     }
@@ -23,12 +28,19 @@ public class FunctionModifier extends FitnessModifier {
     @Override
     public double adjustFitness(double fitness, TreeNode candidate, List<? extends TreeNode> population) {
         if (populationData != null) {
-            return fitness + function.evaluate(populationData);
+            return fitness + function.evaluate(candidate, populationData);
         }
         return fitness;
     }
 
     public static interface Function {
-        double evaluate(PopulationData<? extends TreeNode> populationData);
+        double evaluate(TreeNode candidate, PopulationData<? extends TreeNode> populationData);
+    }
+
+    @Override
+    public String toString() {
+        return "FunctionModifier {" +
+                "function=" + function.toString() +
+                '}';
     }
 }

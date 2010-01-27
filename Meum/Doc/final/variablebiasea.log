@@ -1,7 +1,7 @@
-This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=pdflatex 2009.12.4)  25 JAN 2010 18:14
+This is pdfTeX, Version 3.1415926-1.40.10 (MiKTeX 2.8) (preloaded format=pdflatex 2009.12.4)  27 JAN 2010 06:06
 entering extended mode
 **variablebiasea.tex
-(J:\Projects\meum\Meum\Doc\variablebiasea.tex
+(J:\Projects\meum\Meum\Doc\final\variablebiasea.tex
 LaTeX2e <2009/09/24>
 Babel <v3.8l> and hyphenation patterns for english, dumylang, nohyphenation, ge
 rman, ngerman, german-x-2009-06-19, ngerman-x-2009-06-19, french, polish, loade
@@ -125,7 +125,7 @@ Package: inputenc 2008/03/30 v1.1d Input encoding file
 (E:\Apps\miktex\tex\latex\base\cp1250.def
 File: cp1250.def 2008/03/30 v1.1d Input encoding file
 ))
-(J:\Projects\meum\Meum\Doc\variablebiasea.aux)
+(J:\Projects\meum\Meum\Doc\final\variablebiasea.aux)
 LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 13.
 LaTeX Font Info:    ... okay on input line 13.
 LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 13.
@@ -183,85 +183,177 @@ File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 22.
-
-Underfull \vbox (badness 1314) has occurred while \output is active []
-
  [1{C:/Documents and Settings/Administrator/Local Settings/Application Data/MiK
 TeX/2.8/pdftex/config/pdftex.map}
 
 
 ]
-Underfull \hbox (badness 1320) in paragraph at lines 45--48
-[]\OT4/cmr/m/n/10.95 Analiza ryn-ków zna-cz¡co ró»ni si¦ w za-
+<images/correlation.png, id=10, 501.875pt x 540.0175pt>
+File: images/correlation.png Graphic file (type png)
+
+<use images/correlation.png>
+Underfull \hbox (badness 1448) in paragraph at lines 70--71
+[]\OT4/cmr/m/n/10.95 szukamy mak-sy-mal-nej i mi-ni-mal-nej
  []
 
 
-Underfull \hbox (badness 5175) in paragraph at lines 45--48
-\OT4/cmr/m/n/10.95 le»-no-±ci od cz¦-sto-tli-wo-±ci trans-ak-cji, któr¡
+Underfull \hbox (badness 2111) in paragraph at lines 94--95
+[]\OT4/cmr/m/n/10.95 funkcja celu przyj-muje jako do-dat-kowy
  []
 
 
-Underfull \hbox (badness 3179) in paragraph at lines 49--50
-\OT4/cmr/m/n/10.95 in-nych do-st¦p-nych pa-ra-me-trów) z pew-nego
+Underfull \hbox (badness 1527) in paragraph at lines 94--95
+\OT4/cmr/m/n/10.95 ar-gu-ment mo-dy-fi-ka-tor spraw-no-±ci, który
+ []
+
+[2 <J:/Projects/meum/Meum/Doc/final/images/correlation.png (PNG copy)>]
+Underfull \hbox (badness 1297) in paragraph at lines 109--110
+[]\OT4/cmr/m/n/10.95 zwrócenie zmo-dy-fi-ko-wa-nych ro-dzi-ców do
+ []
+
+<images/crossover.png, id=15, 597.73312pt x 420.82219pt>
+File: images/crossover.png Graphic file (type png)
+
+<use images/crossover.png>
+<images/mutacja3.png, id=16, 597.73312pt x 420.82219pt>
+File: images/mutacja3.png Graphic file (type png)
+
+<use images/mutacja3.png>
+Underfull \hbox (badness 1484) in paragraph at lines 133--134
+[]\OT4/cmr/m/n/10.95 ConstModifier - nie mo-dy-fi-kuje in-deksu
+ []
+
+[3 <J:/Projects/meum/Meum/Doc/final/images/crossover.png> <J:/Projects/meum/Meu
+m/Doc/final/images/mutacja3.png>]
+Underfull \hbox (badness 2671) in paragraph at lines 138--139
+\OT4/cmr/m/n/10.95 Poniewa» al-go-rytm nie wpro-wa-dza »ad-nych
  []
 
 
-Underfull \hbox (badness 2020) in paragraph at lines 63--64
-[]\OT4/cmr/m/n/10.95 zaczynamy od po-pu-la-cji ba-zo-wej drzew
+Underfull \hbox (badness 1383) in paragraph at lines 156--157
+[]\OT4/cmr/m/n/10.95 ArgumentDuplicationModifier - po-nie-wa»
  []
 
-<images/mutacja1.png, id=11, 597.73312pt x 420.82219pt>
-File: images/mutacja1.png Graphic file (type png)
 
-<use images/mutacja1.png>
-<images/mutacja2.png, id=12, 597.73312pt x 420.82219pt>
-File: images/mutacja2.png Graphic file (type png)
-
-<use images/mutacja2.png> [2 <J:/Projects/meum/Meum/Doc/images/mutacja1.png>]
-Underfull \vbox (badness 3735) has occurred while \output is active []
-
-
-Underfull \hbox (badness 1418) in paragraph at lines 101--102
-[]\OT4/cmr/m/n/10.95 propozycja zle-ce« na in-nych in-stru-men-
+Underfull \hbox (badness 1067) in paragraph at lines 166--167
+[]\OT4/cmr/m/n/10.95 Aby uru-cho-mi¢ te-sty, na-le»y wy-wo-ªa¢ ko-
  []
 
-[3 <J:/Projects/meum/Meum/Doc/images/mutacja2.png>] [4
+[4]
+LaTeX Font Info:    External font `plex10' loaded for size
+(Font)              <10.95> on input line 202.
+
+Underfull \hbox (badness 2334) in paragraph at lines 210--211
+\OT4/cmr/m/n/10.95 kie. Po-nie-wa» te-ma-tem tego pro-jektu byªy
+ []
+
+<images/przykladdrzewa.jpg, id=23, 632.3625pt x 351.3125pt>
+File: images/przykladdrzewa.jpg Graphic file (type jpg)
+
+<use images/przykladdrzewa.jpg> [5 <J:/Projects/meum/Meum/Doc/final/images/przy
+kladdrzewa.jpg>]
+Underfull \hbox (badness 1024) in paragraph at lines 226--227
+\OT4/cmr/m/n/10.95 dar-dow¡ funk-cj¡ celu, na zbio-rach tre-nin-go-
+ []
+
+
+Underfull \hbox (badness 1248) in paragraph at lines 232--233
+\OT4/cmr/m/n/10.95 Wy-ge-ne-ro-wane drzewa s¡ wy-so-ko-±ci 8,10,10.
+ []
+
+[6]
+Underfull \hbox (badness 10000) in paragraph at lines 306--306
+[]\OT4/cmr/bx/n/12 Podsumowanie mo-dy-fi-ka-to-rów
+ []
+
+[7]
+Underfull \hbox (badness 10000) in paragraph at lines 318--319
+[]\OT4/cmr/m/n/10.95 modyfikatory dzia-ªaj¡ sy-ner-gi-styczne:
+ []
+
+
+Underfull \hbox (badness 2903) in paragraph at lines 318--319
+\OT4/cmr/m/n/10.95 Zwi¦k-szamy wy-so-ko±¢ mu-ta-cji i na-gra-
+ []
+
+
+Underfull \hbox (badness 3679) in paragraph at lines 323--324
+\OT4/cmr/m/n/10.95 Wprowadzona zo-staªa mo»-li-wo±¢ zmie-nia-nia
+ []
+
+
+Underfull \hbox (badness 7221) in paragraph at lines 323--324
+\OT4/cmr/m/n/10.95 spo-sobu po-dej-mo-wa-nia de-cy-zji w w¦-zªach
+ []
+
+
+Underfull \vbox (badness 1014) has occurred while \output is active []
+
+
+Underfull \hbox (badness 4967) in paragraph at lines 325--326
+[]\OT4/cmr/m/n/10.95 tworzenie drzew de-cy-zyj-nych ª¡-cz¡-cych
+ []
+
+
+Underfull \hbox (badness 1127) in paragraph at lines 353--354
+[]\OT4/cmr/m/n/10.95 Dwie klasy Ge-ne-tic-Pror-gam-min-gE-xam-ple i
+ []
+
+[8]
+Underfull \hbox (badness 3354) in paragraph at lines 362--363
+[]\OT4/cmr/m/n/10.95 Podsumowuj¡c: zmie-nia-nie ukie-run-ko-wa-nia
+ []
+
+[9
 
 ]
-Underfull \hbox (badness 3333) in paragraph at lines 115--116
+Underfull \hbox (badness 3333) in paragraph at lines 369--370
 []\OT4/cmr/m/n/10.95 Kwa±nicka H.: Ob-li-cze-nia ewo-lu-cyjne w
  []
 
 
-Underfull \hbox (badness 1038) in paragraph at lines 116--117
+Underfull \hbox (badness 1038) in paragraph at lines 370--371
 []\OT4/cmr/m/n/10.95 Michalewicz Z.: Al-go-rytmy ge-ne-tyczne +
  []
 
 
-Overfull \hbox (28.55536pt too wide) in paragraph at lines 118--119
+Overfull \hbox (25.02696pt too wide) in paragraph at lines 372--373
+[]\OT4/cmr/m/n/10.95 blog: http://tr8dr.wordpress.com/2009/12/28/10-
+ []
+
+
+Overfull \hbox (28.55536pt too wide) in paragraph at lines 373--374
 []\OT4/cmr/m/n/10.95 blog: http://www.puppetmastertrading.com/blog/ 
  []
 
-[5
+
+Overfull \hbox (4.86072pt too wide) in paragraph at lines 380--381
+[]\OT4/cmr/m/n/10.95 http://www.oanda.com/currency/historical-
+ []
+
+[10
 
 
-] (J:\Projects\meum\Meum\Doc\variablebiasea.aux) ) 
+] (J:\Projects\meum\Meum\Doc\final\variablebiasea.aux) ) 
 Here is how much of TeX's memory you used:
- 1577 strings out of 495238
- 19522 string characters out of 3180619
- 75147 words of memory out of 3000000
- 4797 multiletter control sequences out of 15000+200000
- 10383 words of font info for 31 fonts, out of 3000000 for 9000
+ 1606 strings out of 495238
+ 20089 string characters out of 3180619
+ 76174 words of memory out of 3000000
+ 4822 multiletter control sequences out of 15000+200000
+ 11549 words of font info for 34 fonts, out of 3000000 for 9000
  34 hyphenation exceptions out of 8191
- 25i,7n,24p,922b,222s stack positions out of 5000i,500n,10000p,200000b,50000s
-{E:/Apps/miktex/fonts/enc/dvi
-ps/pl/plrm.enc}<E:/Apps/miktex/fonts/type1/public/amsfonts/cm/cmsy10.pfb><E:/Ap
-ps/miktex/fonts/type1/public/pl/plbx10.pfb><E:/Apps/miktex/fonts/type1/public/p
-l/plbx12.pfb><E:/Apps/miktex/fonts/type1/public/pl/plr10.pfb><E:/Apps/miktex/fo
-nts/type1/public/pl/plr12.pfb><E:/Apps/miktex/fonts/type1/public/pl/plr17.pfb>
-Output written on variablebiasea.pdf (5 pages, 97433 bytes).
+ 25i,7n,24p,497b,222s stack positions out of 5000i,500n,10000p,200000b,50000s
+{E:/Apps/miktex/fonts/e
+nc/dvips/pl/plms.enc}{E:/Apps/miktex/fonts/enc/dvips/pl/plmi.enc}{E:/Apps/mikte
+x/fonts/enc/dvips/pl/plrm.enc}<E:/Apps/miktex/fonts/type1/public/amsfonts/cm/cm
+sy10.pfb><E:/Apps/miktex/fonts/type1/public/pl/plbx10.pfb><E:/Apps/miktex/fonts
+/type1/public/pl/plbx12.pfb><E:/Apps/miktex/fonts/type1/public/pl/plmi10.pfb><E
+:/Apps/miktex/fonts/type1/public/pl/plr10.pfb><E:/Apps/miktex/fonts/type1/publi
+c/pl/plr12.pfb><E:/Apps/miktex/fonts/type1/public/pl/plr17.pfb><E:/Apps/miktex/
+fonts/type1/public/pl/plsy10.pfb>
+Output written on variablebiasea.pdf (10 pages, 178558 bytes).
 PDF statistics:
- 45 PDF objects out of 1000 (max. 8388607)
+ 74 PDF objects out of 1000 (max. 8388607)
  0 named destinations out of 1000 (max. 500000)
- 11 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 21 words of extra memory for PDF output out of 10000 (max. 10000000)
 

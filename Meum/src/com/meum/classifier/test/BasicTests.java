@@ -1,12 +1,12 @@
 package com.meum.classifier.test;
 
 import com.meum.classifier.*;
-import org.testng.Reporter;
-import org.testng.TestNG;
 import org.testng.annotations.Test;
 import org.uncommons.maths.random.MersenneTwisterRNG;
 import org.uncommons.maths.random.Probability;
-import org.uncommons.watchmaker.framework.*;
+import org.uncommons.watchmaker.framework.EvolutionObserver;
+import org.uncommons.watchmaker.framework.EvolutionaryOperator;
+import org.uncommons.watchmaker.framework.TerminationCondition;
 import org.uncommons.watchmaker.framework.selection.RouletteWheelSelection;
 import org.uncommons.watchmaker.framework.termination.GenerationCount;
 import org.uncommons.watchmaker.framework.termination.TargetFitness;
@@ -14,7 +14,7 @@ import org.uncommons.watchmaker.framework.termination.TargetFitness;
 import java.io.IOException;
 import java.util.*;
 
-public class ArtificialDataTests extends EvolutionTest {
+public class BasicTests extends EvolutionTest {
     private static final Map<double[], Target> TEST_DATA = new HashMap<double[], Target>();
 
     static {
@@ -33,7 +33,7 @@ public class ArtificialDataTests extends EvolutionTest {
         final List<EvolutionaryOperator<TreeNode>> operators = new ArrayList<EvolutionaryOperator<TreeNode>>();
         operators.add(new Mutation(Probability.EVENS, factory));
         operators.add(new Simplification());
-        final TestConfig config = new TestConfig("Basic test to check everything is up and runnning",
+        final TestConfig config = new TestConfig("BasicTest",
                 2, 1000, 20, new TerminationCondition[]{
                         new TargetFitness(0, false),
                         new GenerationCount(1000)},
@@ -53,7 +53,7 @@ public class ArtificialDataTests extends EvolutionTest {
         final List<EvolutionaryOperator<TreeNode>> operators = new ArrayList<EvolutionaryOperator<TreeNode>>();
         operators.add(new Mutation(Probability.EVENS, factory));
         operators.add(new Simplification());
-        final TestConfig config = new TestConfig("Basic test to check everything is up and runnning",
+        final TestConfig config = new TestConfig("BasicTest2",
                 2, 1000, 20, new TerminationCondition[]{
                         new TargetFitness(0, false),
                         new GenerationCount(1000)},

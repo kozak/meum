@@ -4,9 +4,14 @@ import com.meum.classifier.TreeNode;
 
 import java.util.List;
 
-public class ConstModifier extends FitnessModifier {
+public class NoOpModifier extends FitnessModifier {
     @Override
     public double adjustFitness(double fitness, TreeNode candidate, List<? extends TreeNode> population) {
         return fitness;
+    }
+
+    @Override
+    public String toString() {
+        return "NoOpModifier";
     }
 }

@@ -1,7 +1,9 @@
 package com.meum.classifier;
 
+import com.meum.classifier.decision.Decision;
 import org.uncommons.maths.random.Probability;
 
+import java.util.Map;
 import java.util.Random;
 
 public class LeafNode implements TreeNode {
@@ -79,7 +81,7 @@ public class LeafNode implements TreeNode {
         }
     }
 
-    public TreeNode simplify() {
+    public TreeNode simplify(Map<Decision, Integer> params) {
         return this;
     }
 }
