@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <title>Results $name</title>
+    <style type="text/css">
+        table {
+            border: 1px solid;
+            text-align: center;
+            empty-cells: hide;
+            border-collapse: collapse;
+        }
+
+        tr, td, th {
+            border: 1px solid;
+        }
+    </style>
+    <script type="text/javascript">
+        function toggleElement(elementId) {
+            var element = document.getElementById(elementId);
+            element.style.display = element.style.display == 'block' ? 'none' : 'block';
+        }
+    </script>
+</head>
+<body>
+
+
+<table>
+    <thead>
+    <tr>
+        <th>
+            Market Name
+        </th>
+        <th>
+            Mutation Modifier
+        </th>
+        <th>
+            Fitness Modifier
+        </th>
+        <th>
+            Base Fitness
+        </th>
+        <th>
+            Fitness
+        </th>
+        <th>
+            Tree Height
+        </th>
+        <th>
+            Tree
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    #set( $count = 0)
+    #foreach ($result in $testResults)
+    <tr>
+        <td>
+            $result.marketName
+        </td>
+        <td>
+            $result.mutationModifier
+        </td>
+        <td>
+            $result.fitnessModifier
+        </td>
+        <td>
+            $result.baseFitness
+        </td>
+        <td>
+            $result.fitness
+        </td>
+        <td>
+            $result.treeHeight
+        </td>
+        <td><a href="#" onclick="toggleElement($count);">Show/Hide</a></td>
+    </tr>
+    <tr>
+        <td colspan="7">
+            <img style="display:none;" id=$count src="../images/$result.imageName" alt=$result.imageName/>
+        </td>
+    </tr>
+    #set( $count = $count + 1 )
+    #end
+    </tbody>
+</table>
+</body>
+</html>

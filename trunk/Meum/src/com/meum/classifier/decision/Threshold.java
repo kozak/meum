@@ -10,6 +10,11 @@ public class Threshold implements Decision {
     private final double threshold;
     private final int paramIndex;
 
+    public Threshold(final int paramIndex, final double threshold) {
+        this.threshold = threshold;
+        this.paramIndex = paramIndex;
+    }
+
     public Threshold(final Map<double[], Target> trainingData, final Random rng) {
         final Set<double[]> values = trainingData.keySet();
         int whichValue = rng.nextInt(values.size());
@@ -31,7 +36,7 @@ public class Threshold implements Decision {
 
     @Override
     public int hashCode() {
-        return super.hashCode();    //To change body of overridden methods use File | Settings | File Templates.
+        return paramIndex;
     }
 
     @Override

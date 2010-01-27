@@ -1,7 +1,9 @@
 package com.meum.classifier;
 
+import com.meum.classifier.decision.Decision;
 import org.uncommons.maths.random.Probability;
 
+import java.util.Map;
 import java.util.Random;
 
 public interface TreeNode {
@@ -32,5 +34,5 @@ public interface TreeNode {
 
     TreeNode mutate(Random rng, Probability mutationProbability, DecisionTreeFactory treeFactory);
 
-    TreeNode simplify();
+    TreeNode simplify(Map<Decision, Integer> params);
 }

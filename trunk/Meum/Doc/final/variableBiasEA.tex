@@ -7,14 +7,14 @@
 
 \title{Algorytm indukcji klasyfikatora za pomoc¹ EA z automatycznym prze³¹czaniem ukierunkowañ}
 \author{Anna Manerowska, Michal Kozakiewicz}
-\date{2.12.2009}
+\date{20.01.2009}
 
 
 \begin{document}
 \maketitle 
 
 \section{Wstêp}
-Jako projekt na przedmiot MEUM (Metody Ewolucyjne Uczenia Maszyn) dostaliœmy za zadanie stworzyæ klasyfikator rozwijany za pomoc¹ algorytmu ewolucyjnego, którego ukierunkowanie zmienia³oby siê podczas uruchomienia. EA zostanie u¿yty do zmian drzew decyzyjnych. Zmienne ukierunkowanie rozwoju drzew uzyskamy przez modyfikacje funkcji celu, oceniaj¹cej zarówno efektywnoœæ klasyfikacji jak równie¿ strukturê drzewa.
+Jako projekt na przedmiot MEUM (Metody Ewolucyjne Uczenia Maszyn) dostaliœmy za zadanie stworzyæ klasyfikator rozwijany za pomoc¹ algorytmu ewolucyjnego, którego ukierunkowanie zmienia³oby siê podczas uruchomienia. EA zostanie u¿yty do zmian drzew decyzyjnych. Zmienne ukierunkowanie rozwoju drzew uzyskamy przez modyfikacje funkcji celu oraz operatora mutacji w trakcie uruchomienia algorytmu.
 
 \section{Opis problemu klasyfikacji}
 Zadaniem klasyfikacji bêdzie zakwalifikowanie instrumentu gie³dowego do jednej z trzech grup: [kup, sprzedaj, nie ruszaj]. 
@@ -24,88 +24,342 @@ Zadaniem klasyfikacji bêdzie zakwalifikowanie instrumentu gie³dowego do jednej z
 \item nie ruszaj - algorytm nie potrafi zdecydowaæ
 \end{itemize} 
 
+Na podstawie ci¹gu cen oraz ustalonego maksymalnego czasu posiadania aktyw, wyznaczamy grupê do której nale¿y dany ci¹g;
 
 \section{Dane}
-Klasyfikacjê bêdziemy przeprowadzaæ na cenach archiwalnych wybranych instrumentów. W zale¿noœci od analizowanego okresu czasu, wymagany bêdzie inny typ danych:
+Klasyfikacjê bêdziemy przeprowadzaæ na cenach archiwalnych wybranych instrumentów. W projekcie zdecydowaliœmy siê pracowaæ z danymi typu:
 \begin{itemize}
-\item Intra-day trading, High Frequency trading - czyli kupno i sprzeda¿ instrumentów wielokrotnie w ci¹gu jednego dnia, nie pozostawianie otwartych pozycji na noc. Wymaga danych tick-to-tick czyli ka¿dej zmiany ceny instrumentu w ci¹gu dnia; Dane tick-to-tick s¹ z regu³y dostêpne za op³at¹, zajmuj¹ te¿ olbrzymi¹ iloœæ miejsca; 
-\item Daily trading - czyli transakcje na przestrzeni dni/tygodni; Nie potrzebujemy danych tick-to-tick, wystarcz¹ parametry takie jak:
-\begin{itemize}      
-\item cena otwarcia
-\item cena zamkniêcia
-\item cena maksymalna/minimalna z danego dnia
-\item iloœæ transakcji (volume)
-\end{itemize}
-Dane o tej czêstotliwoœci mo¿na zdobyæ np z Yahoo Finance\cite{YAHOOF}:
-dla okresów o dowolnej, maj¹cej znaczenie dla algorytmu, d³ugoœci.
-
-\item Long term trading - zak³ada d³ugotrwa³e inwestycje, t¹ form¹ nie bêdziemy siê zajmowaæ
+\item Daily trading - czyli transakcje na przestrzeni dni/tygodni; Wymagana jest jedynie cena zamkniêcia danego rynku.
 \end{itemize}
 
-Analiza rynków znacz¹co ró¿ni siê w zale¿noœci od czêstotliwoœci transakcji, któr¹ rozpatrujemy\cite{TR8DER}. 
-Je¿eli nie uda siê zdobyæ wystarczaj¹cej iloœci danych intra-day, zajmiemy siê 
-klasyfikacj¹ danych dziennych.
+Wybraliœmy ten rodzaj cen ze wzglêdu na ³atwoœæ zdobycia danych archiwalnych.
+Jako Ÿród³o u¿yte zosta³o archiwum Oanda\cite{OANDA}.
 
-Wektorem wejœciowym bêdzie ci¹g cen (oraz innych dostêpnych parametrów) z pewnego okresu czasu (zale¿nie od wybranej czêstotliwoœci), równie¿ dla instrumentów innych ni¿ analizowany. 
+Wektorem wejœciowym jest ci¹g cen z pewnego okresu czasu.
+
+
+Do analizy wybraliœmy pary walut:
+\begin{itemize}
+\item AUD/EUR
+\item BRL/EUR
+\item CAD/EUR
+\item CHF/EUR
+\item GBP/EUR
+\item MXN/EUR
+\item NZD/EUR
+\item SGD/EUR
+\end{itemize}
+
+Niektóre waluty maj¹ ze sob¹ siln¹ (gruboœæ krawêdzi) korelacjê (oznaczone kolorem czarnym) lub anty-korelacjê (czerwone), inne maj¹ s³abe zwi¹zki Rys. \ref{fig:korelacja}.
+
+\begin{figure}
+\centering
+\includegraphics[scale=0.3]{images/correlation.png}
+\caption{Korelacja miêdzy walutami}
+\label{fig:korelacja}
+\end{figure}
+
+Na podstawie \cite{TR8DER_CORRELATION} wybraliœmy pary walut które s¹ ze sob¹ skorelowane lub nie, aby zbadaæ zachowanie algorytmu w obu przypadkach. 
+\subsection{Analiza}
+Aby zakwalifikowaæ ci¹g cen do jednej z trzech grup, potrzebne s¹ dane testowe okreœlaj¹ce odpowiedni¹ grupê dla danego ci¹gu cen. Aby wygenerowaæ takie dane u¿yliœmy nastêpuj¹cego sposobu:
+
+\begin{itemize}
+\item wybieramy cene C oddalon¹ o iloœæ cen u¿ytych do klasyfikacji od pierwszej ceny w zbiorze
+\item przeszukujemy ceny wystêpuj¹ce po C w zakresie okreœlonym przez parametr maksymalnego czasu trzymania otwartej pozycji (w dniach):
+\begin{itemize}
+\item szukamy maksymalnej i minimalnej ceny w tym podzbiorze;
+\item je¿eli cena minimalna jest mniejsza o dan¹ wielkoœæ (spread) od obecnej ceny, klasyfikujemy jako SPRZEDAJ;
+\item je¿eli cena maksymalna jest wiêksza o dan¹ wielkoœæ (spread) od obecnej ceny, klasyfikujemy jako KUP;
+\item klasyfikujemy jako NIE RUSZAJ;
+\end{itemize}
+\item przechodzimy o jedn¹ cenê do przodu i generujemy kolejn¹ parê ci¹g, klasa;
+\end{itemize}
 
 \section {Narzêdzia realizacji}
-Podczas pracy nad algorytmem, prototyp powstanie w œrodowisku R, natomiast wersja ostateczna wykonana bêdzie w Javie, przy u¿yciu nastêpuj¹cych bibliotek:
+Projekt zosta³ wykonany w Javie, przy u¿yciu nastêpuj¹cych bibliotek:
 \begin{itemize}
-\item WEKA \cite{WEKA} - biblioteka do eksploracji danych, zawiera implementacjê ró¿nych algorytmów budowy drzew decyzyjnych (m.in. ID3)
 \item Watchmaker \cite{WATCHMAKER}  - biblioteka do metod ewolucyjnych
 \end{itemize}
 
 Wybór jêzyka kompilowanego, jest uzasadniony du¿ymi wymaganiami obliczeniowymi metod ewolucyjnych; Javy, ze wzglêdu na dostêpnoœæ bibliotek i ³atwoœæ programowania.
 
+Zrezygnowaliœmy z prototypu w R, ze wzglêdu na ³atw¹ mo¿liwoœæ wykonania go w Javie przy jednoczesnej oszczêdnoœci czasu. 
+
 \section{Opis algorytmu}
-Prototyp algorytmu wygl¹da nastêpuj¹co:
+Dzia³anie algorytmu wygl¹da nastêpuj¹co:
 \begin{itemize}
-\item zaczynamy od populacji bazowej drzew wygenerowanych algorytmem ID3, których struktura i parametry s¹ zmienione losowo
+\item populacjê bazow¹ budujemy przy u¿yciu drzew losowych o zadanej wielkoœci maksymalnej
 \item osobniki dokonuj¹ klasyfikacji 
-\item oceniamy sprawnoœæ osobników na podstawie pewnej funkcji celu F
-\item wybieramy x osobników do mutacji, metod¹ ruletkow¹
-\item z poœród nowej populacji (powiêkszonej o x) usuwamy x osobników o najni¿szej sprawnoœci 
-\item proces powtarzamy przez g generacji
+\item oceniamy podstawow¹ sprawnoœæ osobników na podstawie funkcji celu F
+\item funkcja celu przyjmuje jako dodatkowy argument modyfikator sprawnoœci, który zmienia sprawnoœæ osobnika
+\item wybieramy e osobników elitarnych, które zostan¹ dodane do populacji wyjœciowej bez zmian
+\item z poœród ca³ej populacji wybieramy dan¹ metod¹ ruletkow¹ p osobników, gdzie p = wielkoœæ populacji - e;
+\item stosujemy operatory ewolucyjne na otrzymanej populacji
+\item na poziomie mutacji równie¿ mo¿liwe jest dodanie modyfikatora, który okreœla gdzie w wybranym osobniku zachodzi mutacja
+\item proces powtarzamy do momentu gdy osi¹gniemy jeden z warunków koñcowych
 \end{itemize}
-Operator mutacji dla drzew decyzyjnych mo¿e zmieniaæ wartoœci parametrów (Rys. \ref{fig:mutacja2}) oraz warunki podzia³u (Rys. \ref{fig:mutacja1}) wêz³a drzewa.  
+
+\subsection{Krzy¿owanie}
+Krzy¿owanie dokonywane jest w jednym punkcie, generuj¹c dwa nowe osobniki z dwóch osobników wejœciowych. Przebiega w nastêpuj¹cy sposób: 
+\begin{itemize}
+\item wybór dwóch rodziców 
+\item wybór indeksu pod-drzewa rodzica 1 
+\item wybór indeksu pod-drzewa rodzica 2
+\item zamiana wybranych pod-drzew w obu rodzicach
+\item zwrócenie zmodyfikowanych rodziców do puli 
+\end{itemize}
+
+ \begin{figure}
+\centering
+\includegraphics[scale=0.3]{images/crossover.png}
+\caption{Krzy¿owanie}
+\label{fig:crossover}
+\end{figure}
+
+
+\subsection{Mutacja}
+Operator mutacji dla drzew decyzyjnych wstawia we wskazanym miejscu nowo wygenerowane pod-drzewo losowe rys.\ref{fig:mutacja3}
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.3]{images/mutacja1.png}
-\caption{Mutacja warunku}
-\label{fig:mutacja1}
+\includegraphics[scale=0.3]{images/mutacja3.png}
+\caption{Mutacja poddrzewa}
+\label{fig:mutacja3}
 \end{figure}
+
+Poziom drzewa na którym nastêpuje mutacja, mo¿e byæ zmieniany podczas uruchomienia algorytmu. S³u¿y do tego modyfikator mutacji. 
+Zaimplementowane modyfikatory to:
+\begin{itemize}
+\item ConstModifier - nie modyfikuje indeksu dziecka;
+\item RangeModifier - modyfikuje indeks dziecka na podstawie numeru generacji; Jako parametry przyjmuje zasiêgi numerów generacji oraz wielkoœæ o jak¹ zwiêkszany jest indeks: np. [0,100,1] oznacza, ¿e dla generacji od 0 do 100 indeks zwiêkszany jest o jeden, w praktyce mutowane jest lewe pod-drzewo;
+\end{itemize}
+
+\subsection{Upraszczanie}
+Poniewa¿ algorytm nie wprowadza ¿adnych ograniczeñ do wyboru argumentu w danym wêŸle decyzyjnym, mo¿liwa s¹ dwie sytuacje które zmniejszaj¹ efektywnoœæ i czytelnoœæ generowanych drzew:
+\begin{itemize}
+\item wêze³ decyzyjny o dwóch takich samych klasach;
+\item wêze³ decyzyjny o parametrze wystêpuj¹cym juz w którymœ z rodziców;
+\end{itemize}
+Aby wyeliminowaæ te sytuacje wprowadzony zosta³ operator upraszczania. Podczas pisania dokumentacji powsta³ pomys³ u¿ycia informacji o duplikatach w celu obni¿enia sprawnoœci osobnika, szczególnie je¿eli klasyfikacja powtarzaj¹cego siê parametru daje inne rezultaty. Czêœciowo jest to ju¿ zaimplementowane, mo¿na osi¹gn¹æ zbli¿ony efekt przez usuniêcie upraszczania i zastosowanie modyfikatora karz¹cego duplikaty:  ArugmentDuplicationModifier, z odpowiednimi wagami.
+
+\subsection{Funkcja celu}
+Funkcja celu F bêdzie zmieniaæ siê w trakcie dzia³ania algorytmu. Jako podstawê sprawnoœci wygenerowanego osobnika uznamy iloœæ poprawnych klasyfikacji. 
+Dodatkowo wprowadziliœmy modyfikatory funkcji celu:
+\begin{itemize}
+\item NoOpModifier - nie modyfikuje funkcji celu;
+\item FunctionModifier - modyfikuje funkcjê celu o wartoœæ obliczon¹ przez dowoln¹ funkcjê przyjmuj¹c¹ jako parametr dane o populacji oraz osobnika testowanego:
+\begin{itemize}
+\item testowana by³y funkcje okresowe np. sin
+\item funkcje ze znan¹ asymptot¹ poziom¹ (np. arctan);
+\end{itemize}
+\item EnsembleModifier - modyfikuje funkcjê celu na podstawie przydatnoœci osobnika dla ca³ej populacji;
+\item ArgumentDuplicationModifier - poniewa¿ generowane drzewa decyzyjne mog¹ mieæ powtarzaj¹ce siê parametry, dziêki temu operatorowi mo¿emy karaæ lub nagradzaæ osobniki za ponowne wykorzystanie parametrów;
+\end{itemize}
+
+\section{Instalacja i uruchomienie}
+Projekt mo¿na pobraæ ze strony:
+\begin{quotation}
+http://code.google.com/p/meum/
+\end{quotation}
+Do kompilacji wymagany jest ANT. 
+
+Aby uruchomiæ testy, nale¿y wywo³aæ komendê:
+\begin{quotation}
+ant tests
+\end{quotation}
+Wygenerowany zostaje katalog tests, zawieraj¹cy
+\begin{itemize}
+\item raport w postaci html, z wynikami oraz parametrami testu;
+\item obrazki drzew wygenerowanych podczas testu; Obrazki potencjalnie bardzo du¿e nie s¹ zapisywane, ze wzglêdu mo¿liwe przekroczenie pamiêci uruchomieniowej;
+\item tabele podsumowuj¹ce uruchomione testy;
+\end{itemize} 
+
+Ze wzglêdu na mnogoœæ testów, nie s¹ one zamieszczone w tym dokumencie. 
+Poniewa¿ uruchomienie wszystkich testów zajmuje du¿¹ iloœæ czasu (nawet do 25 min) na procesorze Intel Quad Core Q6600, przyk³adowy raport jest za³¹czony do dokumentacji. 
+ 
+\section{Format wyników} 
+Wyniki podzielone s¹ na cztery grupy, z czego dla nas interesuj¹ce s¹ trzy:
+\begin{itemize}
+\item Fitness modifier tests - zawiera testy z ró¿nymi modyfikatorami funkcji celu;
+\item Mutation modifier tests - zawiera testy z ró¿nymi modyfikatorami mutacji;
+\item Combined tests - zawiera testy z oboma typami modyfikatorów;
+\end{itemize}
+
+Testy by³y projektowane w taki sposób aby sprawdziæ zachowanie algorytmu z ró¿nymi ustawieniami, jednoczeœnie automatyzuj¹c generowanie raportów.
+Ka¿dy test wyœwietla swoj¹ konfiguracjê:
+\begin{itemize}
+\item nazwê;
+\item maksymaln¹ g³êbokoœæ generowanych pod-drzew;
+\item wielkoœæ populacji bazowej;
+\item iloœæ osobników elitarnych;
+\item u¿yt¹ funkcjê celu i jej modyfikatory;
+\item operatory genetyczne;
+\item obserwatorów ewolucji - obiekty zainteresowane informacjami o zmianach populacji;
+\item klasê generatora liczb losowych, u¿ytego do testu;
+\item strategiê selekcji;  
+\end{itemize}
+Drzewo wynikowe przedstawione jest w postaci:
+\begin{equation}
+arg0 > 1.00 ? BUY : SELL
+\end{equation}
+Generowany jest równie¿ obrazek drzewa w katalogu "images", nazwa testu odpowiada nazwie obrazka.  
+Test wyœwietla jego "podstawow¹" (bez u¿ycia modyfikatorów) sprawnoœæ na zbiorze treningowym i testowym. Wartoœci s¹ z przedzia³u 0-1 gdzie 1 oznacza 100\% b³¹d klasyfikacji a 0 zakwalifikowanie wszystkich przyk³adów prawid³owo. 
+
+We wszystkich przypadkach ewolucja trwa 1000 generacji. 
+
+Mnogoœæ parametrów bardzo utrudnia przeprowadzenie testów dostosowuj¹cych je wszystkie. Poniewa¿ tematem tego projektu by³y zmiany ukierunkowania podczas uruchomienia algorytmu, najwiêcej testów przeznaczonych jest badaniu modyfikatorów tych ukierunkowañ.
+
+Podsumowanie dzia³ania dla danej grupy testów znajduje siê w katalogu summary.
 
 \begin{figure}
 \centering
-\includegraphics[scale=0.3]{images/mutacja2.png}
-\caption{Mutacja parametru}
-\label{fig:mutacja2}
+\includegraphics[scale=0.3]{images/przykladdrzewa.jpg}
+\caption{Przyk³ad drzewa wygenerowanego przez algorytm}
+\label{fig:przykladdrzewa}
 \end{figure}
 
-Funkcja celu F bêdzie zmieniaæ siê w trakcie dzia³ania algorytmu. Jako podstawê sprawnoœci wygenerowanego osobnika uznamy iloœæ poprawnych klasyfikacji. Dodatkowymi warunkami, aktywowanymi po pewnej (jeszcze nie ustalonej) liczbie generacji, b¹dŸ przy spe³nieniu okreœlonych wymagañ (np. osobnik klasyfikuje poprawnie czêœciej ni¿ 50\% ), bêd¹:
-\begin{itemize}
-\item ocena potencjalnej wielkoœci zysku, obliczona na podstawie dalszego wzrostu b¹dŸ spadku ceny instrumentu
-\item ocena struktury drzewa decyzyjnego, np kara za wysokoœæ
-\item mo¿liwoœæ oceny na podstawie historii je¿eli osobnik prze¿y³ do nastêpnych generacji
-\end{itemize}  
+\section{Omówienie rezultatów}
+Do omówienia rezultatów u¿yjemy za³¹czonego raportu 0.
+Wymagany spread dla wszystkich testów wynosi³ 0.002, co dla wiêkszoœci rynków FOREX sprowadza siê do 20 punktów (zmiany do 4 miejsc po przecinku). Innymi s³owy na ka¿dej zainwestowanej z³otówce tracimy lub zyskujemy 20 z³, pomijaj¹c koszty transakcji. Spread ten jest du¿y ale dziêki takiemu wyborowi roœnie pewnoœæ, ¿e klasyfikacja skoñczy siê zyskiem, odrzucaj¹c mniejsze wahania ceny.   
+  
+\subsection{Modyfikatory mutacji}
+Modyfikatory mutacji testowane by³y ze standardow¹ funkcj¹ celu, na zbiorach treningowych z cenami od 01/09/2009 do 01/01/2010 oraz zbiorach testowych z cenami 02/01/2010 do 01/25/2010;
 
-\section{Oczekiwania} 
-Podstawowym pytaniem jest, czy algorytm tego typu mo¿e wygenerowaæ zysk. Nawet je¿eli to siê nie uda, chcielibyœmy zaobserwowaæ czy algorytm wykryje korelacjê miêdzy ró¿nymi instrumentami (np. akcjami firm dzia³aj¹cych w jednej bran¿y \cite{ALEXANDER}). Jakie parametry bêd¹ u¿ywane do klasyfikacji, np czy iloœæ transakcji bêdzie mia³a znaczenie? Czy model cen wygenerowany przez algorytm bêdzie mia³ cechy wspólne z innymi, znanymi modelami rynków\cite{MAXDAMA}? Interesuj¹cym jest równie¿ jak kara za wysokoœæ drzewa wp³ynie na zachowanie algorytmu - d¹¿enie do upraszczania drzew decyzyjnych mo¿e prowadziæ np do zwiêkszenia odpornoœci na zak³ócenia czy zwiêkszania zdolnoœci algorytmu do generalizacji. 
+Klasyfikacja odbywa³a siê na podstawie 15 poprzednich cen.
+Pozycja mog³a byæ trzymana przez nastêpne 15 dni. 
 
-\section{Mo¿liwe rozszerzenia}
-Mo¿liwe s¹ rozszerzenia do algorytmu bazowego (o ró¿nej z³o¿onoœci) np:
+\subsubsection{ConstModifier}
+Wykonane zosta³y 3 testy bez zmian mutacji. Uzyskane wyniki s¹ bardzo dobre dla zbioru treningowego ale bardzo z³e dla zbioru testowego. Wygenerowane drzewa s¹ wysokoœci 8,10,10. Nie u¿ywaj¹ ca³ej puli parametrów. Dla rynku CAD/EUR algorytmowi nie uda³o siê zakwalifikowaæ poprawnie ¿adnego z przyk³adów zbioru testowego. 
+\subsubsection{RangeModifier}
+Modyfikator ten bardzo wp³ywa na wysokoœæ generowanych drzew, szczególnie w przypadku gdy nie u¿ywamy operatora upraszczania. Ponowne wylosowanie tego samego parametru ze zbioru o wielkoœci 15, jest bardzo prawdopodobne podczas 1000 generacji ewolucji 1000 osobników. Próbowaliœmy dobraæ wartoœci zakresów w taki sposób aby:
 \begin{itemize}
-\item informacja o pewnoœci z jak¹ dokonana by³a klasyfikacja
-\item informacja o przewidywanej d³ugoœci trendu instrumentu (np dla [kup] chcielibyœmy wiedzieæ jak bardzo cena mo¿e jeszcze urosn¹æ)
-\item propozycja zleceñ na innych instrumentach zmniejszaj¹cych ryzyko danej inwestycji (Ang. Hedge)
-\item zastosowanie algorytmu w czasie rzeczywistym na aktualnych cenach obowi¹zuj¹cych na gie³dzie 
-\item zastosowanie predefiniowanych (wybranych przez u¿ytkownika) wêz³ów drzew, zwiêkszaj¹cych determinizm algorytmu, parametry których mog³y by byæ rozwijane drog¹ ewolucji 
+\item w miarê rozwoju populacji mutowaæ co raz g³êbiej w drzewie, zak³adaj¹c, ¿e wêz³y bli¿ej korzenia daj¹ ju¿ dobre efekty; 
+\item sytuacjê odwrotn¹, aby uzyskaæ lepsze przechodzenie minimów lokalnych;
+\item strategie mieszan¹, np na pocz¹tku znaleŸæ najlepszy obszar przyci¹gania, i tam przeprowadzaæ dalsz¹ ewolucjê  
 \end{itemize}
+Z przetestowanych par walut, te konfiguracje sprawuj¹ siê dostatecznie dla CAD/EUR (0.22). 
+Wygenerowane drzewa nie s¹ olbrzymie, wysokoœæ od 7 do 11.
+
+\subsubsection{Podsumowanie modyfikatorów mutacji}
+Zastosowanie modyfikatora zmieniaj¹cego miejsce mutacji ma bardzo du¿y wp³yw na generowane drzewa, ale nie jest on odczuwalny gdy u¿ywamy operatora upraszczania przy ma³ej iloœci atrybutów. Modyfikator pozwala na dostarczenie do populacji zarówno nowych osobników jak i subtelne zmiany istniej¹cych. 
+
+\subsection{Modyfikatory funkcji celu}
+Modyfikatory funkcji celu testowane by³y ze standardow¹ mutacj¹, na zbiorach treningowych z cenami od 01/09/2009 do 01/01/2010 oraz zbiorach testowych z cenami 02/01/2010 do 01/25/2010; 
+
+Klasyfikacja odbywa³a siê na podstawie 15 poprzednich cen.
+Pozycja mog³a byæ trzymana przez nastêpne 15 dni.
+\subsection{FunctionModifier}
+W testach zastosowaliœmy nastêpuj¹ce funkcje zmieniaj¹ce ocenê osobnika:
+
+\begin{equation}
+abs(sin(depth*0.1))
+\end{equation}
+\begin{equation}
+-depth*0.001
+\end{equation}
+\begin{equation}
+arctan(depth*0.1))
+\end{equation}
+\begin{equation}
+depth/generation:generation > 0
+\end{equation}
+Ciekawym jest to, ¿e okresowa funkcja 2) generuje bardzo ma³e drzewa, pomimo tego, ¿e wielkoœæ o któr¹ zmienia funkcjê celu jest ma³a, szczególnie w porównaniu z arctan który d¹¿y do asymptoty poziomej i roœnie w okolicach zera du¿o szybciej ni¿ sin. Mo¿liwe, ¿e jest to wynik którego nie da siê uogólniæ na wiele uruchomieñ tego testu.  
+Zgodnie z oczekiwaniami, test u¿ywaj¹cy funkcji nagradzaj¹cej du¿¹ wysokoœæ drzewa osi¹gn¹³ wysokoœæ najwy¿sz¹ z ca³ej grupy. 
+Funkcjê tego typu mo¿na zastosowaæ aby zmusiæ algorytm do patrzenia na wiêksz¹ iloœæ argumentów. 
+
+Jedynie funkcja 3 dla pary CAD/EUR wygenerowa³a dostateczne rozwi¹zanie. 
+
+\subsection{EnsembleModifier}
+W przypadku tego modyfikatora mamy 3 regulowane parametry, które mog¹ promowaæ ró¿ne typy osobników. 
+Przy u¿yciu parametru negativeContribution, wprowadzamy mno¿nik bazowej funkcji celu, który u¿ywany jest w przypadku gdy wy³¹czenie oceny danego osobnika powoduje pogorszenie oceny wykonanej przez g³osowanie ca³ej populacji. 
+
+PositiveContribution odwrotnie do negativeContribution. 
+
+Parametr "noChange" wykorzystywany jest do zmiany funkcji celu w przypadku gdy wykluczenie osobnika nie zmieni klasyfikacji dokonanej przez populacjê. 
+
+Osobniki wp³ywaj¹ce na zmianê klasyfikacji ca³ej populacji, mog¹ byæ postrzegane jako bardzo wartoœciowe, gdy¿ zawieraj¹ materia³ który albo jest bardzo z³y - nale¿y usun¹æ go z puli, albo bardzo dobry wiêc lepiej zapewniæ prze¿ycie osobnikowi. 
+
+Innym interesuj¹cym aspektem tych testów jest to, ¿e ostateczna wartoœæ funkcji celu jest w wynikiem najlepszego osobnika a nie ca³ej populacji. Wiêc pomimo zorientowania populacyjnego funkcji celu, generujemy jednego najlepszego osobnika.
+
+Wysokoœci generowanych drzew siêgaj¹ od 2 przy ustawieniu 
+\begin{quotation}
+negativeContribution=2.0 
+\end{quotation}
+\begin{quotation}
+noChange=1.0 
+\end{quotation}
+\begin{quotation}
+positiveContribution=0.5
+\end{quotation}
+do 9
+\begin{quotation}
+negativeContribution=1.1 
+\end{quotation}
+\begin{quotation}
+noChange=0.9 
+\end{quotation}
+\begin{quotation}
+positiveContribution=0.8
+\end{quotation}
+Oba ustawienia s¹ kontrowersyjne, gdy¿ karz¹ osobniki które zwiêksza³y liczbê poprawnie zakwalifikowanych (przez populacjê) przyk³adów. Pierwszy na parze CAD/EUR uzyska³ dostateczny wynik 0.22. 
+
+\subsection{Podsumowanie modyfikatorów funkcji celu}
+Modyfikatory funkcji celu typu FunctionModifier, maj¹ bardziej zrozumia³y wp³yw na generowane drzewa ni¿ modyfikator Ensemble. Ten drugi uzyskuje powtarzalne dostateczne wyniki na parze CAD/EUR. 
+
+\subsection{Po³¹czenie modyfikatorów mutacji i funkcji celu}
+Testy wykonywane by³y na zbiorach treningowych z cenami od 01/01/2009 do 30/08/2009 oraz zbiorach testowych z cenami 01/09/2010 do 01/01/2010;
+
+Klasyfikacja odbywa³a siê na podstawie 30 poprzednich cen.
+Pozycja mog³a byæ trzymana przez nastêpne 10 dni. 
+
+Modyfikatory wybrane zosta³y aby spe³nia³y jeden z dwóch warunków:
+\begin{itemize}
+\item modyfikatory równowa¿¹ swoje dzia³anie: Zwiêkszaj¹c wysokoœæ mutacji, równoczeœnie karzemy wysokie drzewa;
+\item modyfikatory dzia³aj¹ synergistyczne: Zwiêkszamy wysokoœæ mutacji i nagradzamy wysokie drzewa;
+\end{itemize}
+
+U¿ycie wiêkszego zbioru testowego w przypadku instrumentów gie³dowych, nie musi byæ dobrym rozwi¹zaniem. Algorytm dostosowuje siê do trendów które mog¹ ju¿ nie wystêpowaæ. Nie uzyskana zosta³a ¿adna dostateczna wartoœæ funkcji celu na zbiorze testowym. Równie¿ sprawnoœæ na zbiorze treningowym mocno zmala³a. 
+\section{Inne zrealizowane pomys³y}
+Wprowadzona zosta³a mo¿liwoœæ zmieniania sposobu podejmowania decyzji w wêz³ach drzewa. Chcieliœmy mieæ mo¿liwoœæ podejmowania decyzji na podstawie dowolnej funkcji, a nie tylko wartoœci jednego argumentu. Zaimplementowane mia³y byæ funkcje statystyczne (jedna istnieje - wartoœæ œrednia). Niestety pomys³ powsta³ doœæ póŸno, bardzo spowalnia³ uruchomienie programu i nie by³o czasu na optymalizacjê. Zastosowanie takiego rozwi¹zanie mog³oby pozwoliæ na: 
+\begin{itemize}
+\item tworzenie drzew decyzyjnych ³¹cz¹cych ró¿ne modele rynków finansowych
+\item tworzenie drzew decyzyjnych o mniejszych rozmiarach (wiêcej informacji zawartych w danym wêŸle)
+\end{itemize} 
+
+Drugi pomys³ zosta³ nam podsuniêty przez przyk³ad wystêpuj¹cy w bibliotece WATCHMAKER. Jest to programowanie genetyczne. W kodzie Ÿród³owym znajduje siê modyfikacja przyk³adu z biblioteki w celu regresji na testowym zbiorze cen. Dodaliœmy obs³ugê wiêkszej iloœci operatorów:
+\begin{equation}
+exp(x)
+\end{equation}
+\begin{equation}
+sqrt(x)
+\end{equation}
+\begin{equation}
+sqr(x)
+\end{equation}
+do ju¿ istniej¹cych:
+\begin{equation}
++
+\end{equation}
+\begin{equation}
+-
+\end{equation}
+\begin{equation}
+>
+\end{equation}
+\begin{equation}
+if then else
+\end{equation}
+
+Dwie klasy GeneticProrgammingExample i Markets posiadaj¹ funkcje "main" i mo¿na spróbowaæ je uruchomiæ. Z wstêpnych testów uzyskiwaliœmy b³¹d ok. 20 punktów. Algorytm potrzebowa³ te¿ bardzo du¿o czasu na dzia³anie.
 
 \section{Podsumowanie}
-Algorytm ewolucyjny jest nieintuicyjny podczas gdy umys³ ludzki poszukuje rozwi¹zañ na utartych œcie¿kach, ciê¿ko mu wybiæ siê ze schematu. Najczêœciej sprawdza jedynie proste symetryczne konstrukcje. Algorytm ewolucyjny jest wolny od tych ograniczeñ. Swobodnie sprawdza wszystkie poprawne rozwi¹zania, poszukuj¹c najlepszego. Istotn¹ zalet¹ ewolucyjnego podejœcia do modelowania jest równie¿ znaczne ograniczenie wiedzy a priori. W ekonometrii to analityk decyduje o formie funkcyjnej modelu, sugeruj¹c siê testami statystycznymi, wiedz¹ ekonomiczn¹ na temat modelowanego zjawiska oraz w³asnym doœwiadczeniem. W podejœciu ewolucyjnym to ewolucja steruje wyborem najbardziej odpowiedniej funkcji. Proces modelowania jest wiêc w pe³ni sterowany danymi, bez wiedzy z zewn¹trz. Wykonanie projektu pozwoli nam, w jakimœ stopniu na ocenê wartoœci algorytmu ewolucyjnego w modelowaniu ekonomicznym.
+Niestety nie jesteœmy zadowoleni z wyników algorytmu je¿eli chodzi o klasyfikacjê rynków gie³dowych. Jedyna para na której powtarzalnie uzyskiwane by³y dostateczne wyniki to CAD/EUR. Poniewa¿ korelacja tej pary jest s³aba, warto by³oby przetestowaæ inne s³abo skorelowane pary. 
 
+Zaobserwowaliœmy du¿y wp³yw modyfikatorów funkcji celu i mutacji na generowane drzewa, a tym samym na ukierunkowanie algorytmu. Nastêpnym pomys³em by³oby modyfikowanie ukierunkowania w m¹drzejszy sposób. Na przyk³ad, wykrywaj¹c stagnacjê - brak poprawy przez kilka generacji, b¹dŸ podobn¹ sprawnoœæ wszystkich osobników w populacji - zmienilibyœmy algorytm tak aby wprowadza³ nowy materia³ genetyczny. 
+
+Mo¿liwa jest tez, w podejœciu hybrydowym, sytuacja w której tak dobieramy algorytm ewolucyjny aby przeciwdzia³a³ wbudowanym ukierunkowaniom drugiej metody. 
+
+Podsumowuj¹c: zmienianie ukierunkowania jest jednym ze sposobów wp³ywania na wygenerowane rozwi¹zanie, ale dziêki naszemu algorytmowi nie staniemy siê miliarderami!
 
 \clearpage
 \begin{thebibliography}{9}
@@ -115,6 +369,7 @@ Algorytm ewolucyjny jest nieintuicyjny podczas gdy umys³ ludzki poszukuje rozwi¹
 \bibitem{KWASNICKA} Kwaœnicka H.: Obliczenia ewolucyjne w sztucznej inteligencji, Oficyna Wydawnicza PWr., Wroc³aw, 1999
 \bibitem{MICHALEWICZ} Michalewicz Z.: Algorytmy genetyczne + struktury danych = programy ewolucyjne, WNT, Warszawa, 1996
 \bibitem{TR8DER} blog: http://tr8dr.wordpress.com/
+\bibitem{TR8DER_CORRELATION} blog: http://tr8dr.wordpress.com/2009/12/28/10-years/
 \bibitem{HACKTHEMARKET} blog: http://www.puppetmastertrading.com/blog/
 \bibitem{MAXDAMA} blog: http://www.maxdama.com/
 \bibitem{ALEXANDER} Carol Alexander: Market Models: A Guide to Financial Data 
@@ -122,6 +377,7 @@ Analysis, Wiley, 2001
 \bibitem{WEKA} http://www.cs.waikato.ac.nz/ml/weka/
 \bibitem{WATCHMAKER} http://watchmaker.uncommons.org/
 \bibitem{YAHOOF} http://finance.yahoo.com/ 
+\bibitem{OANDA} http://www.oanda.com/currency/historical-rates
 \end{thebibliography}
 
 
