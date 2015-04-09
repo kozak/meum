@@ -1,0 +1,1 @@
+The project will try to evolve decision trees with ability to classify a market to one of the 3 classes [buy,sell,leave]. The fitness function will be modified during the execution of the algorithm.
